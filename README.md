@@ -1,6 +1,6 @@
 # Banco de Demandas Local Multissetorial
 
-> Aplicação web para mapeamento, consulta e visualização georreferenciada das organizações do terceiro setor da Região Metropolitana de Campina Grande (PB), subsidiando ações de ensino, pesquisa e extensão da UNIFACISA.
+> Aplicação web para mapeamento, consulta e visualização georreferenciada de possíveis organizações parceiras na Região Metropolitana de Campina Grande (PB), subsidiando ações de ensino, pesquisa e extensão da UNIFACISA.
 
 **Status:** Aplicação em desenvolvimento e base de dados sendo consolidada
 
