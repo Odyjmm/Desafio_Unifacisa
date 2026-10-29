@@ -37,6 +37,11 @@ Uma base de dados curada e georreferenciada, acompanhada de uma aplicação web 
 | Hospedagem | [Vercel](https://vercel.com/) |
 | Versionamento | Git e GitHub |
 
+###
+
+
+É possível ter acesso aos protótipos das telas em: [Link para o Figma](https://www.figma.com/site/PCix4ZmbSRakV54SsvehJW/Desafio-Unifacisa?node-id=0-1&t=idJ1HhzjquUuP9yr-1)
+
 ---
 
 ## Modelo de dados
