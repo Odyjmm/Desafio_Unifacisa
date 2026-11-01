@@ -28,9 +28,9 @@ assert.deepEqual(c(3301), { situacao: 'mapeada', categoria: 'Organizações Soci
 assert.deepEqual(c(3069), { situacao: 'mapeada', categoria: 'Fundações privadas' });
 assert.equal(c(2062, 'Sociedade Empresária Limitada').situacao, 'nao_aceita');
 assert.equal(c(1015).situacao, 'nao_aceita');
-assert.equal(c(2143).situacao, 'revisao');   // cooperativa
-assert.equal(c(3077).situacao, 'revisao');   // serviço social autônomo
-assert.equal(c(null).situacao, 'revisao');   // desconhecida: o moderador decide
+assert.equal(c(2143).situacao, 'revisao');
+assert.equal(c(3077).situacao, 'revisao');
+assert.equal(c(null).situacao, 'revisao');
 
 const real = {
   uf: 'PB', cep: '58120000', cnpj: '65479262000126', email: null, bairro: 'ZONA RRUAL', numero: 'SN',

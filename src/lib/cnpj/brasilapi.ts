@@ -30,7 +30,7 @@ export type ResultadoConsulta =
   | { ok: true; dados: DadosCnpj }
   | { ok: false; erro: 'cnpj_invalido' | 'nao_encontrado' | 'limite' | 'indisponivel'; detalhe?: string };
 
-const URL_BASE = 'https://brasilapi.com.br/api/cnpj/v1';
+const URL_BASE = process.env.BRASILAPI_URL || 'https://brasilapi.com.br/api/cnpj/v1';
 
 const USER_AGENT = 'DesafioUnifacisa/1.0 (projeto academico UNIFACISA/NUPEX)';
 

@@ -17,7 +17,7 @@ function digito(base: string, pesos: number[]): number {
 export function cnpjValido(entrada: string): boolean {
   const c = limparCnpj(entrada);
   if (!/^[0-9A-Z]{12}[0-9]{2}$/.test(c)) return false;
-  if (/^(.)\1{13}$/.test(c)) return false;
+  if (/^(.)\1{13}$/.test(c)) return false; // 00000000000000, 11111111111111...
   const d1 = digito(c.slice(0, 12), PESOS_DV1);
   const d2 = digito(c.slice(0, 12) + d1, PESOS_DV2);
   return c.endsWith(`${d1}${d2}`);
@@ -35,4 +35,13 @@ export function raizCnpj(entrada: string): string {
 
 export function ehMatriz(entrada: string): boolean {
   return limparCnpj(entrada).slice(8, 12) === '0001';
+}
+
+export function cnpjDaMatriz(entrada: string): string | null {
+  const c = limparCnpj(entrada);
+  if (!/^[0-9A-Z]{12}[0-9]{2}$/.test(c)) return null;
+  const base = c.slice(0, 8) + '0001';
+  const d1 = digito(base, PESOS_DV1);
+  const d2 = digito(base + d1, PESOS_DV2);
+  return `${base}${d1}${d2}`;
 }
