@@ -48,13 +48,13 @@ begin
 
     insert into public.organizacoes (
         id, cnpj, razao_social, nome_fantasia, natureza_juridica_id, cnae_principal_id,
-        area_atuacao_id, ano_criacao, municipio_id, bairro_id, endereco_completo, cep,
+        ano_criacao, municipio_id, bairro_id, endereco_completo, cep,
         latitude, longitude, responsavel, telefone_1, telefone_2, email,
         site_url, instagram, facebook,
         status_verificacao, fonte_coleta, coletado_em, atualizado_em
     )
     select t.org_id, t.cnpj, t.razao_social, t.nome_fantasia, t.natureza_juridica_id, c.id,
-           t.area_atuacao_id, t.ano_criacao, t.municipio_id, b.id, t.endereco_completo, t.cep,
+           t.ano_criacao, t.municipio_id, b.id, t.endereco_completo, t.cep,
            t.latitude, t.longitude, t.responsavel, t.telefone_1, t.telefone_2, t.email,
            t.site, t.instagram, t.facebook,
            'pendente', 'importacao_inicial', v_data, v_data
@@ -68,6 +68,12 @@ begin
            ) b on true
      order by t.linha;
     get diagnostics v_qtd = row_count;
+
+    insert into public.organizacao_areas (organizacao_id, area_id)
+    select t.org_id, t.area_atuacao_id
+      from tmp_import t
+     where t.area_atuacao_id is not null
+    on conflict do nothing;
 
     insert into public.organizacao_publicos (organizacao_id, publico_id)
     select distinct t.org_id, pa.id
@@ -86,11 +92,3 @@ begin
     raise notice 'Importação concluída: % organizações gravadas.', v_qtd;
 end
 $$;
-
-select
-    (select count(*) from public.organizacoes)                  as organizacoes,
-    (select count(*) from public.organizacoes where demandas is null) as com_demandas_vazia,
-    (select count(*) from public.bairros)                       as bairros,
-    (select count(*) from public.cnaes)                         as cnaes,
-    (select count(*) from public.organizacao_publicos)          as ligacoes_publico,
-    (select count(*) from public.organizacao_cnaes_secundarios) as ligacoes_cnae_sec;
