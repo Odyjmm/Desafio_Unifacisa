@@ -34,7 +34,6 @@ export type AcessoModerador =
   | { ok: true; db: SupabaseClient }
   | { ok: false; status: 401 | 403; mensagem: string };
 
-/** Exige moderador logado. 401 = sem login válido; 403 = logado, mas não é moderador. */
 export async function exigirModerador(): Promise<AcessoModerador> {
   const db = await clienteDaSessao();
   const { data, error } = await db.rpc('e_moderador');
@@ -45,7 +44,7 @@ export async function exigirModerador(): Promise<AcessoModerador> {
 
 export function mesmaOrigem(req: Request): boolean {
   const origem = req.headers.get('origin');
-  if (!origem) return true; // chamadas de servidor/ferramentas não enviam Origin
+  if (!origem) return true;
   try {
     return new URL(origem).origin === new URL(req.url).origin;
   } catch {
