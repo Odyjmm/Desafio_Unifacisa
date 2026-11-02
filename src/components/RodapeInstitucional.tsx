@@ -17,9 +17,9 @@ const REPOSITORIO = [
 export default function RodapeInstitucional() {
   const titulo = "mb-2 text-[13px] font-medium text-[#0b3a7c]";
   return (
-    <footer className="mx-auto mt-6 max-w-[1280px] px-6 pb-10 text-[10.5px] leading-snug text-[#222] md:pl-[208px]">
+    <footer className="mx-auto mt-6 max-w-[1280px] px-6 pb-10 text-[11.5px] leading-snug text-[#222] sm:text-[10.5px] xl:pl-[208px]">
       <Image src="/img/logo-unifacisa.png" alt="Unifacisa Centro Universitário" width={179} height={40} className="h-[40px] w-auto" />
-      <div className="mt-8 grid gap-6 md:grid-cols-[228px_187px_166px_250px]">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-[228px_187px_166px_250px]">
         <div>
           <p className={titulo}>Unidades</p>
           <div className="space-y-2 pl-4">
@@ -39,7 +39,7 @@ export default function RodapeInstitucional() {
           <p className={titulo}>Fale Conosco</p>
           <ul className="space-y-2"><li>(83) 2101-8877</li><li>Conversar no WhatsApp</li><li>Contato</li><li>Ouvidoria</li><li>Secretaria Acadêmica</li></ul>
         </div>
-        <div><Image src="/img/selo-emec.png" alt="Consulte aqui o cadastro da Instituição no Sistema e-MEC" width={400} height={299} className="h-auto w-[250px]" /></div>
+        <div><Image src="/img/selo-emec.png" alt="Consulte aqui o cadastro da Instituição no Sistema e-MEC" width={400} height={299} className="h-auto w-[250px] max-w-full" /></div>
       </div>
       <div className="mt-8 text-[10px]"><p>CESED - Centro de Ensino Superior e Desenvolvimento Ltda.</p><p>© 2026 Todos os direitos reservados.</p><p>CNPJ: 02.108.023/0001-40</p></div>
     </footer>
