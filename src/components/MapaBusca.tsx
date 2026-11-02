@@ -28,7 +28,7 @@ function Zoom({ aoMudar }: { aoMudar: (z: number) => void }) {
 }
 function Controles() {
   const mapa = useMap();
-  const b = "flex h-9 w-9 items-center justify-center bg-white text-lg font-bold text-marinho";
+  const b = "flex h-10 w-10 items-center justify-center bg-white text-lg font-bold text-marinho transition-colors duration-150 hover:bg-fundo active:bg-[#e4ebfb]";
   return (
     <div className="absolute right-3 top-3 z-[500] overflow-hidden rounded-xl shadow-md">
       <button aria-label="Aproximar" className={b} onClick={() => mapa.zoomIn()}>+</button>
@@ -44,7 +44,7 @@ export default function MapaBusca({ municipios, marcadores, selecionado, aoSelec
   const [zoom, setZoom] = useState(10);
   const maior = Math.max(1, ...municipios.map((m) => m.total));
   return (
-    <MapContainer center={CENTRO_RMCG} zoom={10} zoomControl={false} scrollWheelZoom className="h-full min-h-[560px] w-full rounded-[22px] bg-[#dfe8fb]">
+    <MapContainer center={CENTRO_RMCG} zoom={10} zoomControl={false} scrollWheelZoom className="h-full min-h-[440px] w-full rounded-[22px] sm:min-h-[560px] bg-[#dfe8fb]">
       <TileLayer attribution="&copy; OpenStreetMap &copy; CARTO" url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
       <Zoom aoMudar={setZoom} />
       <Controles />
