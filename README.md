@@ -67,3 +67,14 @@ A coleta utiliza fontes secundárias públicas, entre elas:
 
 **Centro Universitário UNIFACISA** - NUPEX (Núcleo de Pesquisa e Extensão)
 Campina Grande, Paraíba, Brasil
+
+## Front-end (telas do Figma)
+
+Telas em `src/app`: Início (`/`), Buscar (`/buscar`: lista, bolhas por município e pontos no mapa Leaflet), Indicadores,
+Cadastro em 3 etapas (`/cadastro`) e Administrador (`/administrador`). Imagens exportadas do Figma ficam em `public/img`.
+
+- Acesso ao backend: `src/lib/api.ts` (consultas ao Supabase com a chave pública e chamadas às rotas `/api`).
+- Componentes compartilhados: `src/components` (cabeçalho, rodapés, hero das telas internas, mapas, Turnstile).
+- Para rodar: copie `.env.example` para `.env.local`, preencha as chaves **públicas** do guia do backend e, só em
+  desenvolvimento, `API_PROXY_URL` (nunca defina na Vercel). Nunca faça commit do `.env.local`.
+- Moderação (`/administrador`) só funciona de verdade no site publicado: as rotas conferem o cabeçalho `Origin`.
