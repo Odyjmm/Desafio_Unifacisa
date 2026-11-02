@@ -127,7 +127,7 @@ export default function Cadastro() {
   const caixas = (k: "areaIds" | "publicoIds" | "tiposParceriaIds", opcoes: Opcao[]) => (
     <div className="flex flex-wrap gap-2">
       {opcoes.map((o) => (
-        <label key={o.id} className={`flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-[12px] font-semibold ${f[k].includes(o.id) ? "border-azul bg-azul text-white" : "border-[#dfe5f1] bg-white text-marinho"}`}>
+        <label key={o.id} className={`botao-anim flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-[12px] font-semibold ${f[k].includes(o.id) ? "border-azul bg-azul text-white" : "border-[#dfe5f1] bg-white text-marinho"}`}>
           <input type="checkbox" className="sr-only" checked={f[k].includes(o.id)} onChange={() => alternar(k, o.id)} />{o.nome}
         </label>
       ))}
@@ -145,12 +145,12 @@ export default function Cadastro() {
   );
 
   return (
-    <main className="flex min-h-[1500px] flex-col bg-fundo">
+    <main className="flex min-h-screen flex-col bg-fundo">
       <HeroInterno titulo={<>Coloque sua<br />organização no<br />mapa das parcerias.</>} alvo altura={424} tituloClass="max-w-none md:text-[52px]" />
-      <div className="relative z-10 mx-auto -mt-[60px] mb-12 grid w-full max-w-[1280px] gap-[25px] px-4 md:px-[24px] lg:grid-cols-[minmax(0,887px)_1fr]">
+      <div className="relative z-10 mx-auto -mt-[60px] mb-12 grid w-full max-w-[1280px] gap-[25px] px-3 sm:px-4 md:px-[24px] xl:grid-cols-[minmax(0,887px)_1fr]">
         <section className="relative rounded-[28px] bg-white p-5 shadow-[0_8px_30px_rgba(2,42,103,0.08)] md:p-[36px]">
           {/* Stepper */}
-          <ol className="grid gap-[9px] sm:grid-cols-3">
+          <ol className="grid gap-[9px] md:grid-cols-3">
             {NOMES_ETAPA.map((n, i) => {
               const ativa = etapa === i + 1, feita = etapa > i + 1;
               return (
@@ -173,8 +173,8 @@ export default function Cadastro() {
           <div className="mt-5 grid gap-x-4 gap-y-4 md:grid-cols-2">
             {etapa === 1 && (<>
               <div className="md:col-span-2"><label>{rotulo("CNPJ *")}
-                <div className="flex gap-3"><input className={entrada} placeholder="00.000.000/0000-00" value={f.cnpj} onChange={(e) => set("cnpj", e.target.value)} />
-                  <button type="button" className="h-[54px] shrink-0 rounded-[18px] bg-lavanda px-6 text-[13px] font-bold text-white disabled:opacity-50" disabled={ocupado || !f.cnpj} onClick={consultarCnpj}>{ocupado ? "Consultando…" : "Consultar CNPJ"}</button></div></label>{erro("cnpj")}</div>
+                <div className="flex flex-col gap-3 sm:flex-row"><input className={entrada} placeholder="00.000.000/0000-00" value={f.cnpj} onChange={(e) => set("cnpj", e.target.value)} />
+                  <button type="button" className="botao-anim h-[54px] shrink-0 rounded-[18px] bg-lavanda px-6 text-[13px] font-bold text-white disabled:opacity-50" disabled={ocupado || !f.cnpj} onClick={consultarCnpj}>{ocupado ? "Consultando…" : "Consultar CNPJ"}</button></div></label>{erro("cnpj")}</div>
               <div className="flex gap-3 rounded-[18px] bg-[#eef1ff] p-4 text-[12.5px] text-marinho md:col-span-2">
                 <span aria-hidden className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-azul text-[10px] font-bold text-azul">i</span>
                 <p>Aceitamos apenas CNPJ com situação <b>ativa</b>. Matriz e filiais são consolidadas em um único registro — cadastre a unidade que atua na região.</p></div>
@@ -199,9 +199,9 @@ export default function Cadastro() {
               <label>{rotulo("Complemento / referência")}<input className={entrada} placeholder="Ex.: ao lado da escola municipal" value={f.complemento} onChange={(e) => set("complemento", e.target.value)} /></label>
               <div className="relative md:col-span-2">
                 <MapaPino lat={f.latitude ?? CAMPINA[0]} lng={f.longitude ?? CAMPINA[1]} aoMover={moverPino} />
-                <button type="button" onClick={localizar} className="absolute left-3 top-3 z-[500] rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-marinho shadow">Localizar endereço</button>
-                <span className="absolute bottom-3 left-3 z-[500] rounded-full bg-white px-4 py-2 text-[12px] font-bold text-marinho shadow">Arraste o marcador até a porta da instituição</span>
-                <button type="button" onClick={usarMinhaLocalizacao} className="absolute bottom-3 right-3 z-[500] rounded-[12px] bg-marinho px-4 py-2 text-[12px] font-bold text-white">Usar minha localização</button>
+                <button type="button" onClick={localizar} className="botao-anim absolute left-3 top-3 z-[500] rounded-full bg-white px-3 py-2 text-[12px] font-semibold text-marinho shadow">Localizar endereço</button>
+                <span className="absolute bottom-3 left-3 z-[500] hidden rounded-full bg-white px-4 py-2 text-[12px] font-bold text-marinho shadow sm:block">Arraste o marcador até a porta da instituição</span>
+                <button type="button" onClick={usarMinhaLocalizacao} className="botao-anim absolute bottom-3 right-3 z-[500] rounded-[12px] bg-marinho px-4 py-2.5 text-[12px] font-bold text-white">Usar minha localização</button>
                 {f.latitude !== null && <p className="mt-1 text-[11px] text-[#5b6b8c]">Latitude {f.latitude.toFixed(5)} · Longitude {f.longitude?.toFixed(5)}</p>}{erro("latitude")}
               </div>
             </>)}
@@ -217,14 +217,14 @@ export default function Cadastro() {
             </div>)}
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[#e8edf7] pt-5">
+          <div className="mt-6 flex flex-col-reverse items-stretch justify-between gap-3 border-t sm:flex-row sm:flex-wrap sm:items-center border-[#e8edf7] pt-5">
             <div className="flex items-center gap-4">
-              {etapa > 1 && <button type="button" className="h-[44px] rounded-full border border-[#dfe5f1] px-5 text-[13px] font-bold text-marinho" onClick={() => setEtapa(etapa - 1)}>Voltar</button>}
-              <button type="button" className="text-[12.5px] font-bold text-azul underline" onClick={salvarRascunho}>Salvar rascunho</button>
+              {etapa > 1 && <button type="button" className="botao-anim h-[44px] rounded-full border border-[#dfe5f1] px-5 text-[13px] font-bold text-marinho" onClick={() => setEtapa(etapa - 1)}>Voltar</button>}
+              <button type="button" className="botao-anim rounded-full px-3 py-2 text-[12.5px] font-bold text-azul underline" onClick={salvarRascunho}>Salvar rascunho</button>
             </div>
             {etapa < 3
-              ? <button type="button" className="h-[46px] rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50" disabled={!modo && etapa === 1} onClick={() => setEtapa(etapa + 1)}>Continuar →</button>
-              : <button type="button" className="h-[46px] rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50" disabled={ocupado} onClick={enviar}>{ocupado ? "Enviando…" : "Enviar para análise"}</button>}
+              ? <button type="button" className="botao-anim h-[48px] w-full rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50 sm:w-auto" disabled={!modo && etapa === 1} onClick={() => setEtapa(etapa + 1)}>Continuar →</button>
+              : <button type="button" className="botao-anim botao-pulso h-[48px] w-full rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50 sm:w-auto" disabled={ocupado} onClick={enviar}>{ocupado ? "Enviando…" : "Enviar para análise"}</button>}
           </div>
         </section>
 

@@ -22,14 +22,83 @@
   --font-sans: var(--font-albert), system-ui, sans-serif;
 }
 
+html { -webkit-text-size-adjust: 100%; }
+
 body {
   background: #fff;
   color: var(--texto);
   font-family: var(--font-albert), system-ui, sans-serif;
+  /* Evita rolagem horizontal em telas estreitas (celular, janela dividida do Windows). */
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Imagens e mapas nunca passam da largura da tela. */
+img, svg, video, canvas { max-width: 100%; }
+.leaflet-container { font-family: inherit; }
+/* Campos com 16px no celular impedem o zoom automático do iPhone ao focar. */
+@media (max-width: 767px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+
+/* ---------- Animações ---------- */
+@keyframes subir { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+@keyframes menu-descer { from { opacity: 0; transform: translateY(-8px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes pulso-suave { 0%, 100% { box-shadow: 0 0 0 0 rgba(21, 85, 240, 0.45); } 50% { box-shadow: 0 0 0 10px rgba(21, 85, 240, 0); } }
+@keyframes brilho { from { transform: translateX(-120%) skewX(-20deg); } to { transform: translateX(260%) skewX(-20deg); } }
+
+.anim-subir { animation: subir 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-aparecer { animation: aparecer 0.35s ease-out both; }
+.anim-menu { animation: menu-descer 0.22s ease-out both; }
+
+/* Botão animado: sobe no hover, afunda no clique, brilho passando e foco visível.
+   Use junto com a cor do botão (bg-azul, bg-lavanda, bg-marinho...). */
+:is(.botao-anim, .btn) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, filter 0.2s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+:is(.botao-anim, .btn)::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-120%) skewX(-20deg);
+  pointer-events: none;
+  z-index: -1;
+}
+:is(.botao-anim, .btn):focus-visible { outline: 3px solid rgba(21, 85, 240, 0.55); outline-offset: 3px; }
+:is(.botao-anim, .btn):disabled, :is(.botao-anim, .btn)[aria-disabled="true"] { cursor: not-allowed; }
+@media (hover: hover) and (pointer: fine) {
+  :is(.botao-anim, .btn):not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(2, 42, 103, 0.22); filter: brightness(1.08); }
+  :is(.botao-anim, .btn):not(:disabled):hover::after { animation: brilho 0.8s ease; }
+}
+:is(.botao-anim, .btn):not(:disabled):active { transform: translateY(1px) scale(0.97); box-shadow: 0 2px 6px rgba(2, 42, 103, 0.2); filter: brightness(0.96); }
+.botao-pulso { animation: pulso-suave 2.4s ease-in-out infinite; }
+
+/* Cartões e etiquetas clicáveis levantam um pouco ao passar o mouse. */
+.cartao-anim { transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.2s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .cartao-anim:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(2, 42, 103, 0.16); }
+}
+.cartao-anim:active { transform: scale(0.985); }
+
+/* Link de navegação com sublinhado que cresce. */
+.link-anim { transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+.link-anim:active { transform: scale(0.95); }
+
+/* Quem prefere menos movimento no sistema não recebe animações. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
 
 /* Classes reutilizadas nas telas (botões, campos, cartões do desenho). */
-.btn { @apply inline-flex items-center justify-center rounded-full bg-azul px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110 disabled:opacity-50; }
+.btn { @apply inline-flex items-center justify-center rounded-full bg-azul px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50; }
 .btn-escuro { @apply bg-marinho; }
 .btn-claro { @apply bg-white !text-marinho border border-marinho/20; }
 .campo { @apply w-full rounded-xl border border-marinho/15 bg-white px-3 py-2.5 text-sm outline-none focus:border-azul focus:ring-2 focus:ring-azul/20; }

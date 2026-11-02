@@ -11,14 +11,14 @@ export default function BarraBusca() {
   const [municipios, setMunicipios] = useState<Opcao[]>([]);
   useEffect(() => { carregarListas().then((l) => { setAreas(l.areas); setMunicipios(l.municipios); }).catch(() => {}); }, []);
   return (
-    <form action="/buscar" className="mx-auto mt-[19px] grid max-w-[1172px] gap-3 rounded-[30px] bg-white p-4 shadow-[0_8px_30px_rgba(2,42,103,0.14)] md:grid-cols-[400px_278px_273px_1fr] md:items-stretch md:gap-[11px] md:px-[14px] md:py-[14px]">
+    <form action="/buscar" className="mx-auto mt-[19px] grid max-w-[1172px] gap-3 rounded-[30px] bg-white p-3 shadow-[0_8px_30px_rgba(2,42,103,0.14)] sm:p-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-stretch lg:gap-[11px] lg:px-[14px] lg:py-[14px]">
       <label className="block rounded-[22px] bg-fundo px-5 py-3"><span className={rotulo}>O que você procura?</span>
         <input name="q" className={campo} placeholder="Reforço escolar, horta comunitária..." /></label>
       <label className="block rounded-[22px] bg-fundo px-5 py-3"><span className={rotulo}>Área de atuação</span>
         <select name="area" className={campo}><option value="">Todas as áreas</option>{areas.map((a) => <option key={a.id} value={a.id}>{a.nome}</option>)}</select></label>
       <label className="block rounded-[22px] bg-fundo px-5 py-3"><span className={rotulo}>Município</span>
         <select name="municipio" className={campo}><option value="">Toda a região</option>{municipios.map((m) => <option key={m.id} value={m.id}>{m.nome}</option>)}</select></label>
-      <button className="flex items-center justify-center gap-3 rounded-[22px] bg-azul px-6 text-[17px] font-bold text-white font-[family-name:var(--font-poppins)]">
+      <button className="botao-anim flex min-h-[56px] items-center justify-center gap-3 rounded-[22px] bg-azul px-6 text-[17px] sm:col-span-2 lg:col-span-1 lg:px-10 font-bold text-white font-[family-name:var(--font-poppins)]">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>Buscar</button>
     </form>
   );
