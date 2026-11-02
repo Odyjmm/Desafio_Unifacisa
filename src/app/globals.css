@@ -1,26 +1,38 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
+/* Tokens extraídos do Figma "Desafio Unifacisa" (azul vibrante, azul-marinho e fundo claro). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --azul: #1555f0;
+  --marinho: #022a67;
+  --marinho-2: #01347c;
+  --fundo: #f4f6fb;
+  --lavanda: #8b7cf6;
+  --texto: #0b1b3a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-azul: var(--azul);
+  --color-marinho: var(--marinho);
+  --color-marinho-2: var(--marinho-2);
+  --color-fundo: var(--fundo);
+  --color-lavanda: var(--lavanda);
+  --font-poppins: var(--font-poppins), system-ui, sans-serif;
+  --color-texto: var(--texto);
+  --font-sans: var(--font-albert), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: var(--texto);
+  font-family: var(--font-albert), system-ui, sans-serif;
 }
+
+/* Classes reutilizadas nas telas (botões, campos, cartões do desenho). */
+.btn { @apply inline-flex items-center justify-center rounded-full bg-azul px-5 py-2.5 text-sm font-bold text-white transition hover:brightness-110 disabled:opacity-50; }
+.btn-escuro { @apply bg-marinho; }
+.btn-claro { @apply bg-white !text-marinho border border-marinho/20; }
+.campo { @apply w-full rounded-xl border border-marinho/15 bg-white px-3 py-2.5 text-sm outline-none focus:border-azul focus:ring-2 focus:ring-azul/20; }
+.rotulo { @apply mb-1 block text-xs font-bold uppercase tracking-wide text-marinho; }
+.cartao { @apply rounded-3xl bg-white p-6 shadow-[0_8px_30px_rgba(1,41,103,0.08)]; }
+.erro-campo { @apply mt-1 text-xs font-semibold text-red-600; }
