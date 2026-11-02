@@ -49,7 +49,7 @@ export default function Administrador() {
   if (!logado) return (
     <main className="bg-fundo">
       <HeroInterno titulo={<>Área do administrador</>} altura={300} />
-      <div className="mx-auto -mt-16 max-w-md px-4 pb-16">
+      <div className="mx-auto -mt-16 max-w-md px-3 pb-16 sm:px-4">
       <form onSubmit={entrar} className="cartao space-y-4">
         <h1 className="text-2xl font-black text-marinho">Administrador</h1>
         <div><label className="rotulo" htmlFor="e">E-mail</label><input id="e" type="email" className="campo" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
@@ -65,14 +65,14 @@ export default function Administrador() {
   return (
     <main className="bg-fundo">
       <HeroInterno titulo={<>Fila de moderação</>} altura={300} />
-      <div className="mx-auto -mt-16 max-w-5xl px-4 pb-16">
+      <div className="mx-auto -mt-16 max-w-5xl px-3 pb-16 sm:px-4">
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-[22px] bg-white p-4">
         <p className="text-lg font-black text-marinho">Envios para análise</p>
         <button className="btn btn-claro" onClick={sair}>Sair</button>
       </div>
-      <div className="mt-4 flex gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {(["pendente", "aprovada", "rejeitada"] as const).map((s) => (
-          <button key={s} onClick={() => setStatus(s)} className={`rounded-full px-4 py-1.5 text-sm font-bold capitalize ${status === s ? "bg-azul text-white" : "bg-white text-marinho"}`}>{s}s</button>
+          <button key={s} onClick={() => setStatus(s)} className={`botao-anim rounded-full px-4 py-2 text-sm font-bold capitalize ${status === s ? "bg-azul text-white" : "bg-white text-marinho"}`}>{s}s</button>
         ))}
       </div>
       <p className="mt-3 text-sm">{total} envio(s) {status}(s).</p>
@@ -92,9 +92,9 @@ export default function Administrador() {
             </div>
             {it.status === "rejeitada" && <p className="mt-2 text-sm text-red-700">Motivo: {it.motivo_rejeicao}</p>}
             {it.status === "pendente" && (
-              <div className="mt-3 flex flex-wrap items-end gap-2">
+              <div className="mt-3 flex flex-col items-stretch gap-2 sm:flex-row sm:flex-wrap sm:items-end">
                 <button className="btn" onClick={() => decidir(it.id, "aprovar")}>Aprovar</button>
-                <input className="campo !w-64" placeholder="Motivo da rejeição" value={motivo[it.id] ?? ""} onChange={(e) => setMotivo({ ...motivo, [it.id]: e.target.value })} />
+                <input className="campo !w-full sm:!w-64" placeholder="Motivo da rejeição" value={motivo[it.id] ?? ""} onChange={(e) => setMotivo({ ...motivo, [it.id]: e.target.value })} />
                 <button className="btn btn-escuro" onClick={() => decidir(it.id, "rejeitar")}>Rejeitar</button>
               </div>
             )}
