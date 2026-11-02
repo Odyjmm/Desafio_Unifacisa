@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Albert_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 import Cabecalho from "@/components/Cabecalho";
@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   title: "Desafio UNIFACISA — Mapa das parcerias",
   description: "Conectando demandas a soluções inovadoras: encontre organizações do terceiro setor da Região Metropolitana de Campina Grande.",
 };
+
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
