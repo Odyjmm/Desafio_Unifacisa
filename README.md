@@ -31,7 +31,7 @@ Uma base de dados curada e georreferenciada, acompanhada de uma aplicação web 
 | Camada | Tecnologia |
 |---|---|
 | Front-end e back-end | [Next.js](https://nextjs.org/) (React) com TypeScript |
-| Banco de dados e API | [Supabase](https://supabase.com/) (PostgreSQL + PostGIS) |
+| Banco de dados e API | [Supabase](https://supabase.com/) (PostgreSQL) |
 | Mapa | [Leaflet](https://leafletjs.com/) / React-Leaflet |
 | Geocodificação | [Nominatim](https://nominatim.org/) (OpenStreetMap) |
 | Hospedagem | [Vercel](https://vercel.com/) |
