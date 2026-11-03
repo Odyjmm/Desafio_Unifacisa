@@ -64,7 +64,7 @@ export default function Inicio() {
           <svg className="absolute left-1/2 top-0 hidden h-[92px] w-[300px] -translate-x-1/2 lg:block" viewBox="0 0 300 92" aria-hidden>
             <path d="M0 92 H30 C58 92 72 84 84 64 L96 32 C104 12 126 4 150 4 C174 4 196 12 204 32 L216 64 C228 84 242 92 270 92 H300 Z" fill="#1555f0" />
           </svg>
-          <Image src="/img/alvo-adesivo.webp" alt="" width={280} height={259} className="absolute left-1/2 top-[12px] z-10 hidden h-[104px] w-auto -translate-x-1/2 lg:block" />
+          <Image src="/img/alvo-adesivo.webp" alt="" width={224} height={208} className="absolute left-1/2 top-[12px] z-10 hidden h-[104px] w-auto translate-x-[calc(-50%+6px)] lg:block" />
           <div className="rounded-[32px] bg-azul px-4 pb-4 pt-4 sm:px-[33px] sm:pb-[33px] sm:pt-6 lg:rounded-[44px] lg:pt-[62px]">
             <div className="grid gap-[18px] md:grid-cols-2 lg:grid-cols-3">
               <Publico titulo="ESTUDANTES" foto="/img/card-estudantes.webp" classeFoto="mx-[14px] mb-[20px]" w={685} h={380}>
