@@ -1,6 +1,22 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+/* Mapa da busca: fundo mais claro e suave, para as bolhas azuis se destacarem. */
+.mapa-claro { filter: grayscale(0.45) saturate(0.85) brightness(1.05) contrast(0.95); }
+.mapa-bolha { background: none; border: 0; }
+.mapa-bolha-num {
+  display: flex; align-items: center; justify-content: center; border-radius: 50%;
+  border: 3px solid #fff; color: #fff; font-weight: 800; box-shadow: 0 2px 8px rgba(2, 42, 103, 0.35);
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+.mapa-bolha-nome {
+  position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 2px; white-space: nowrap;
+  font-size: 10.5px; font-weight: 700; color: #022a67; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff; pointer-events: none;
+}
+.mapa-bolha:hover .mapa-bolha-num { transform: scale(1.12); box-shadow: 0 6px 16px rgba(2, 42, 103, 0.45); }
+.leaflet-tooltip { border: 0; border-radius: 10px; padding: 6px 10px; color: #022a67; font-size: 12px; box-shadow: 0 4px 14px rgba(2, 42, 103, 0.2); }
+.leaflet-tooltip-top::before { border-top-color: #fff; }
+
 /* Tokens extraídos do Figma "Desafio Unifacisa" (azul vibrante, azul-marinho e fundo claro). */
 :root {
   --azul: #1555f0;
