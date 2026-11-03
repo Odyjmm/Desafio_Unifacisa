@@ -62,20 +62,20 @@ export default function Inicio() {
         {/* Públicos: painel azul com aba central e três cartões brancos */}
         <section className="relative mt-[40px] lg:pt-[90px]" aria-label="Para quem é o Desafio">
           <svg className="absolute left-1/2 top-0 hidden h-[92px] w-[260px] -translate-x-1/2 lg:block" viewBox="0 0 260 92" aria-hidden>
-            <path d="M0 92 L48 92 C70 92 76 84 86 70 L96 24 C100 8 112 0 130 0 C148 0 160 8 164 24 L174 70 C184 84 190 92 212 92 L260 92 Z" fill="#1555f0" />
+            <path d="M0 92 H34 C56 92 66 84 76 66 L90 32 C97 12 112 4 130 4 C148 4 163 12 170 32 L184 66 C194 84 204 92 226 92 H260 Z" fill="#1555f0" />
           </svg>
-          <Image src="/img/alvo-adesivo.webp" alt="" width={261} height={253} className="absolute left-1/2 top-[4px] z-10 hidden h-[118px] w-auto -translate-x-1/2 lg:block" />
+          <Image src="/img/alvo-adesivo.webp" alt="" width={261} height={253} className="absolute left-1/2 top-[14px] z-10 hidden h-[104px] w-auto -translate-x-1/2 lg:block" />
           <div className="rounded-[32px] bg-azul px-4 pb-4 pt-4 sm:px-[33px] sm:pb-[33px] sm:pt-6 lg:rounded-[44px] lg:pt-[62px]">
             <div className="grid gap-[18px] md:grid-cols-2 lg:grid-cols-3">
               <Publico titulo="ESTUDANTES" foto="/img/card-estudantes.webp" classeFoto="mx-[14px] mb-[20px]" w={685} h={380}>
-                <p className="text-[21px] leading-[1.15] sm:text-[25px]">Feito para quem transforma o cotidiano.</p>
+                <p className="text-[21px] leading-[1.12] sm:text-[25px]">Feito para quem transforma o cotidiano.</p>
               </Publico>
               <Publico titulo="PROFESSORES" foto="/img/card-professores.webp" classeFoto="mb-0 rounded-[34px]" w={733} h={306}>
-                <p className="text-[21px] font-bold leading-[1.15] sm:text-[25px]">Orientação com foco e propósito.</p>
-                <p className="mt-1 text-[18px] leading-[1.15] sm:text-[22px]">Acompanhe projetos e conecte turmas a organizações parceiras.</p>
+                <p className="text-[21px] font-bold leading-[1.12] sm:text-[25px]">Orientação com<br />foco e propósito.</p>
+                <p className="mt-1 max-w-[270px] text-[18px] leading-[1.12] sm:text-[22px]">Acompanhe projetos e conecte turmas a organizações parceiras.</p>
               </Publico>
               <Publico cls="md:col-span-2 lg:col-span-1" titulo="ORGANIZAÇÕES" foto="/img/card-organizacoes.webp" classeFoto="mx-[14px] mb-[20px] rounded-[90px/70px]" w={684} h={380}>
-                <p className="text-[21px] leading-[1.15] sm:text-[25px]">Comunidade vira prioridade.</p>
+                <p className="text-[21px] leading-[1.12] sm:text-[25px]">Comunidade vira prioridade.</p>
               </Publico>
             </div>
           </div>
