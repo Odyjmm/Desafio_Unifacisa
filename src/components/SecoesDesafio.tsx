@@ -141,29 +141,32 @@ export default function SecoesDesafio() {
         <section aria-labelledby="teoria" className="rounded-[32px] bg-[#efefef] px-6 py-8 sm:px-10 lg:rounded-[44px]">
           <div className="grid items-center gap-6 sm:grid-cols-[1fr_160px]">
             <div>
+              {/* No celular a foto fica ao lado do título, como no desktop, em vez de sobrar embaixo do texto */}
+              <Image src="/img/inicio/teoria-pratica.webp" alt="" aria-hidden width={170} height={250} className="float-right ml-4 mb-2 h-[150px] w-[100px] rounded-[50px] object-cover sm:hidden" />
               <Etiqueta>Teoria &amp; Prática</Etiqueta>
               <h2 id="teoria" className="mt-4 text-[26px] font-bold leading-[1.1] text-marinho sm:text-[27px]">Um modelo de trabalho interdisciplinar</h2>
               <p className="mt-4 text-[13.5px] leading-[1.55] text-marinho">
                 O Desafio UNIFACISA é um modelo de trabalho que estimula a interdisciplinaridade e a combinação entre teoria e prática. Sistematiza os conhecimentos do curso e oferece vivência prático-profissional, com aplicação em situações reais.
               </p>
             </div>
-            <Image src="/img/inicio/teoria-pratica.webp" alt="Estudante usando um notebook" width={170} height={250} className="mx-auto h-[250px] w-[160px] rounded-[80px] object-cover" />
+            <Image src="/img/inicio/teoria-pratica.webp" alt="Estudante usando um notebook" width={170} height={250} className="mx-auto hidden h-[250px] w-[160px] rounded-[80px] object-cover sm:block" />
           </div>
         </section>
 
-        <section aria-labelledby="metodo" className="rounded-[32px] bg-azul px-6 py-8 text-white sm:px-10 lg:rounded-[44px]">
+        <section aria-labelledby="metodo" className="relative rounded-[32px] bg-azul px-6 py-8 text-white sm:px-10 lg:rounded-[44px]">
+          <Image src="/img/inicio/design-thinking.webp" alt="" aria-hidden width={130} height={130} className="absolute right-6 top-8 h-[88px] w-[88px] rounded-full object-cover sm:hidden" />
           <Etiqueta claro>Método</Etiqueta>
-          <h2 id="metodo" className="mt-4 text-[26px] font-bold leading-[1.1] sm:text-[28px]">Processo de Design Thinking</h2>
+          <h2 id="metodo" className="mt-4 pr-[104px] text-[26px] font-bold leading-[1.1] sm:pr-0 sm:text-[28px]">Processo de Design Thinking</h2>
           <div className="mt-6 grid items-center gap-4 sm:grid-cols-[1fr_130px]">
             <ul className="space-y-3">
               {DESIGN_THINKING.map((f) => (
                 <li key={f.fase} className="flex flex-wrap items-center gap-x-2.5 gap-y-2">
-                  <span className="w-[112px] text-[11px] font-bold uppercase tracking-wide">{f.fase}</span>
+                  <span className="w-full text-[11px] font-bold uppercase tracking-wide sm:w-[112px]">{f.fase}</span>
                   {f.itens.map((i) => <span key={i} className="rounded-full bg-white px-4 py-2 text-[14px] font-bold text-marinho">{i}</span>)}
                 </li>
               ))}
             </ul>
-            <Image src="/img/inicio/design-thinking.webp" alt="" width={130} height={130} className="mx-auto h-[130px] w-[130px] rounded-full object-cover" />
+            <Image src="/img/inicio/design-thinking.webp" alt="" width={130} height={130} className="mx-auto hidden h-[130px] w-[130px] rounded-full object-cover sm:block" />
           </div>
         </section>
       </div>

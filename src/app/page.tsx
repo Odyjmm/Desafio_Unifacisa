@@ -17,16 +17,16 @@ const ETAPAS = [
 function Etapa({ n, t, d }: (typeof ETAPAS)[number]) {
   const embaixo = Number(n) % 2 === 1;
   const numero = (
-    <div className={`flex h-[130px] items-center justify-center bg-azul text-[64px] sm:h-[160px] sm:text-[84px] font-bold leading-none text-white font-[family-name:Arial,Helvetica,sans-serif] ${embaixo ? "rounded-t-[50%_100%] pt-6" : "rounded-b-[50%_100%] pb-6"}`}>{n}</div>
+    <div className={`flex h-[72px] items-center justify-center bg-azul text-[38px] sm:h-[160px] sm:text-[84px] font-bold leading-none text-white font-[family-name:Arial,Helvetica,sans-serif] ${embaixo ? "rounded-t-[50%_100%] pt-3 sm:pt-6" : "rounded-b-[50%_100%] pb-3 sm:pb-6"}`}>{n}</div>
   );
   const texto = (
-    <div className={`px-6 pb-6 text-center text-white sm:px-[34px] sm:pb-0 ${embaixo ? "pt-8 sm:pt-[44px]" : "pt-6 sm:pt-[38px]"}`}>
-      <h3 className="text-[24px] font-bold sm:text-[27px]">{t}</h3>
-      <p className="mt-3 text-[17px] leading-[1.28] sm:text-[19px]">{d}</p>
+    <div className={`px-3 pb-4 text-center text-white sm:px-[34px] sm:pb-0 ${embaixo ? "pt-5 sm:pt-[44px]" : "pt-4 sm:pt-[38px]"}`}>
+      <h3 className="text-[17px] font-bold sm:text-[27px]">{t}</h3>
+      <p className="mt-2 text-[12.5px] leading-[1.3] sm:mt-3 sm:text-[19px]">{d}</p>
     </div>
   );
   return (
-    <div className={`cartao-anim flex min-h-[340px] flex-col overflow-hidden rounded-[26px] bg-marinho sm:min-h-[397px] ${embaixo ? "justify-between" : ""}`}>
+    <div className={`cartao-anim flex min-h-[250px] flex-col overflow-hidden rounded-[20px] bg-marinho sm:min-h-[397px] sm:rounded-[26px] ${embaixo ? "justify-between" : ""}`}>
       {embaixo ? (<>{texto}{numero}</>) : (<>{numero}{texto}</>)}
     </div>
   );
@@ -57,7 +57,7 @@ export default function Inicio() {
         <section className="mt-[15px]" aria-labelledby="como">
           <p className="text-center text-[22px] leading-tight text-marinho sm:text-[32px]">COMO FUNCIONA</p>
           <h2 id="como" className="text-center text-[26px] font-bold leading-tight text-marinho sm:text-[32px] lg:text-[38px]">Do bairro à base consolidada, <span className="font-bold text-[#2f80ff]">em quatro etapas.</span></h2>
-          <div className="mt-[22px] grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-[24px] xl:gap-[32px]">{ETAPAS.map((e) => <Etapa key={e.n} {...e} />)}</div>
+          <div className="mt-[22px] grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-[24px] xl:gap-[32px]">{ETAPAS.map((e) => <Etapa key={e.n} {...e} />)}</div>
         </section>
 
         {/* Públicos: painel azul com aba central e três cartões brancos */}
