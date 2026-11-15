@@ -26,6 +26,8 @@ const VAZIO: Form = {
 const RASCUNHO = "desafio-unifacisa:rascunho-cadastro";
 const CAMPINA: [number, number] = [-7.2307, -35.8811];
 const entrada = "h-[54px] w-full rounded-[14px] border border-[#dfe5f1] bg-white px-4 text-[13px] text-marinho outline-none placeholder:text-[#8a97b3] focus:border-azul";
+const DESC_TIPO: [string, string][] = [["extens", "Turmas atuam ao longo do semestre"], ["tcc", "Pesquisa aplicada com um estudante"], ["desafio", "Equipes propõem soluções"]];
+const descricaoTipo = (nome: string) => DESC_TIPO.find(([k]) => nome.toLowerCase().includes(k))?.[1];
 const NOMES_ETAPA = ["Dados da instituição", "Localização", "Perfil de atuação"];
 
 export default function Cadastro() {
@@ -127,8 +129,9 @@ export default function Cadastro() {
   const caixas = (k: "areaIds" | "publicoIds" | "tiposParceriaIds", opcoes: Opcao[]) => (
     <div className="flex flex-wrap gap-2">
       {opcoes.map((o) => (
-        <label key={o.id} className={`botao-anim flex cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-[12px] font-semibold ${f[k].includes(o.id) ? "border-azul bg-azul text-white" : "border-[#dfe5f1] bg-white text-marinho"}`}>
-          <input type="checkbox" className="sr-only" checked={f[k].includes(o.id)} onChange={() => alternar(k, o.id)} />{o.nome}
+        <label key={o.id} className={`botao-anim flex cursor-pointer items-center gap-2 rounded-full border px-4 py-3 text-[13px] font-bold ${f[k].includes(o.id) ? "border-azul bg-azul text-white" : "border-[#dfe5f1] bg-white text-marinho"}`}>
+          <input type="checkbox" className="sr-only" checked={f[k].includes(o.id)} onChange={() => alternar(k, o.id)} />
+          <span aria-hidden className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] text-[11px] leading-none ${f[k].includes(o.id) ? "border-white bg-white text-azul" : "border-[#8a97b3] bg-white text-transparent"}`}>✓</span>{o.nome}
         </label>
       ))}
     </div>
@@ -166,7 +169,7 @@ export default function Cadastro() {
           <p className="text-[13px] text-[#5b6b8c]">
             {etapa === 1 && "Comece pelo CNPJ: buscamos razão social, natureza jurídica e situação cadastral nas bases públicas."}
             {etapa === 2 && "Onde a instituição atende. É esse endereço que aparece no mapa de busca."}
-            {etapa === 3 && "Conte o que a instituição faz e quem ela atende. Isso alimenta os filtros da busca."}
+            {etapa === 3 && "Conte o que a instituição faz e onde estudantes podem ajudar."}
           </p>
           {aviso.map((a, i) => <p key={i} role={a.tipo === "erro" ? "alert" : "status"} className={`mt-3 rounded-2xl p-3 text-[13px] ${a.tipo === "ok" ? "bg-[#eef1ff] text-marinho" : "bg-red-50 text-red-700"}`}>{a.texto}</p>)}
 
@@ -207,12 +210,20 @@ export default function Cadastro() {
             </>)}
 
             {etapa === 3 && (<div className="space-y-6 md:col-span-2">
-              <div><p className="mb-2 text-[13px] font-bold text-marinho">Áreas de atuação * <span className="font-normal text-[#5b6b8c]">({f.areaIds.length} selecionadas)</span></p>{caixas("areaIds", listas?.areas ?? [])}{erro("areaIds")}</div>
-              <div><p className="mb-2 text-[13px] font-bold text-marinho">Público atendido * <span className="font-normal text-[#5b6b8c]">({f.publicoIds.length} selecionados)</span></p>{caixas("publicoIds", listas?.publicos ?? [])}{erro("publicoIds")}</div>
-              <div><p className="mb-2 text-[13px] font-bold text-marinho">Tipos de parceria</p>{caixas("tiposParceriaIds", listas?.tipos ?? [])}</div>
-              <label className="block">{rotulo("Demandas da instituição")}<textarea className={`${entrada} h-auto py-3`} rows={4} maxLength={2000} placeholder="Descreva o que a instituição precisa" value={f.demandas} onChange={(e) => set("demandas", e.target.value)} /></label>
-              <label className="flex items-start gap-3 text-[12.5px] text-marinho"><input type="checkbox" checked={f.aceiteDeclaracao} onChange={(e) => set("aceiteDeclaracao", e.target.checked)} className="mt-0.5" />
-                <span>Declaro que as informações são verdadeiras e autorizo a divulgação dos dados públicos da instituição.</span></label>{erro("aceiteDeclaracao")}
+              <div><p className="mb-2 text-[12px] font-bold text-marinho">Áreas de atuação * <span className="font-normal text-[#5b6b8c]">(marque todas que se aplicam)</span></p>{caixas("areaIds", listas?.areas ?? [])}{erro("areaIds")}</div>
+              <div><p className="mb-2 text-[12px] font-bold text-marinho">Público atendido *</p>{caixas("publicoIds", listas?.publicos ?? [])}{erro("publicoIds")}</div>
+              <label className="block"><span className="mb-1.5 block text-[12px] font-bold text-marinho">Qual é a principal demanda da instituição hoje?</span><textarea className={`${entrada} h-auto py-3`} rows={3} maxLength={2000} placeholder="Ex.: precisamos organizar o cadastro das famílias atendidas e hoje usamos cadernos." value={f.demandas} onChange={(e) => set("demandas", e.target.value)} /></label>
+              <div><p className="mb-2 text-[12px] font-bold text-marinho">Que tipo de parceria interessa?</p>
+                <div className="grid gap-[9px] md:grid-cols-3">
+                  {(listas?.tipos ?? []).map((o) => { const on = f.tiposParceriaIds.includes(o.id), d = descricaoTipo(o.nome); return (
+                    <label key={o.id} className={`botao-anim flex cursor-pointer items-start gap-3 rounded-[16px] border px-4 py-3 ${on ? "border-azul bg-[#eef1ff]" : "border-[#dfe5f1] bg-white"}`}>
+                      <input type="checkbox" className="sr-only" checked={on} onChange={() => alternar("tiposParceriaIds", o.id)} />
+                      <span aria-hidden className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] border-[1.5px] text-[11px] leading-none ${on ? "border-azul bg-azul text-white" : "border-[#8a97b3] bg-white text-transparent"}`}>✓</span>
+                      <span><b className="block text-[14px] text-marinho">{o.nome}</b>{d && <span className="text-[12px] text-[#5b6b8c]">{d}</span>}</span>
+                    </label>); })}
+                </div></div>
+              <label className="flex items-start gap-3 rounded-[16px] bg-[#f0f3fb] px-4 py-4 text-[13px] text-marinho"><input type="checkbox" checked={f.aceiteDeclaracao} onChange={(e) => set("aceiteDeclaracao", e.target.checked)} className="mt-0.5 h-[18px] w-[18px] shrink-0" />
+                <span>Declaro que a instituição não tem fins lucrativos, atua com finalidade social, comunitária ou beneficente, e autorizo a publicação destes dados na base do Desafio Unifacisa.</span></label>{erro("aceiteDeclaracao")}
               <Turnstile aoValidar={setToken} />
             </div>)}
           </div>
@@ -224,7 +235,7 @@ export default function Cadastro() {
             </div>
             {etapa < 3
               ? <button type="button" className="botao-anim h-[48px] w-full rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50 sm:w-auto" disabled={!modo && etapa === 1} onClick={() => setEtapa(etapa + 1)}>Continuar →</button>
-              : <button type="button" className="botao-anim botao-pulso h-[48px] w-full rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50 sm:w-auto" disabled={ocupado} onClick={enviar}>{ocupado ? "Enviando…" : "Enviar para análise"}</button>}
+              : <button type="button" className="botao-anim botao-pulso h-[48px] w-full rounded-full bg-azul px-8 text-[14px] font-bold text-white disabled:opacity-50 sm:w-auto" disabled={ocupado} onClick={enviar}>{ocupado ? "Enviando…" : "Enviar para validação →"}</button>}
           </div>
         </section>
 
