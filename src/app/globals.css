@@ -115,8 +115,11 @@ img, svg, video, canvas { max-width: 100%; }
 
 /* Quem prefere menos movimento no sistema não recebe animações. */
 @media (prefers-reduced-motion: reduce) {
-  .marquee-trilho { animation: none !important; transform: none !important; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+/* A faixa de logos é lenta e suave: continua passando, só que ainda mais devagar, mesmo com "reduzir animações" ligado (comum em celulares). */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-trilho { animation-duration: 70s !important; animation-iteration-count: infinite !important; }
 }
 
 /* Classes reutilizadas nas telas (botões, campos, cartões do desenho). */
