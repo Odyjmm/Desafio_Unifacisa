@@ -55,6 +55,25 @@ export async function buscarOrganizacoes(f: Filtros, limite = 20, deslocamento =
   return data as { total: number; itens: Organizacao[] };
 }
 
+/** Colunas públicas da ficha (a coluna "busca" não deve ser selecionada). */
+const COLUNAS_FICHA = "id,nome,cnpj,situacao_cadastral,municipio,bairro,endereco_completo,latitude,longitude,natureza_juridica,areas,publicos,tipos_parceria,demandas,telefone_1,email,site_url,instagram,facebook";
+
+/** Uma organização pelo id: usada quando o ponto clicado no mapa não está entre as primeiras da lista. */
+export async function organizacaoPorId(id: string) {
+  const { data, error } = await supabase().from("v_organizacoes_publicas").select(COLUNAS_FICHA).eq("id", id).maybeSingle();
+  if (error) throw error;
+  return (data as Organizacao | null) ?? null;
+}
+
+/** Link do WhatsApp (só para celulares com DDD, que são os que têm WhatsApp). Devolve null quando não dá. */
+export function linkWhatsapp(telefone: string | null | undefined, nomeOrganizacao: string) {
+  let d = (telefone ?? "").replace(/\D/g, "");
+  if (d.startsWith("55") && d.length >= 12) d = d.slice(2);
+  if (d.length !== 11 || d[2] !== "9") return null;
+  const msg = `Olá! Encontrei a ${nomeOrganizacao} no mapa do Desafio Unifacisa e gostaria de conversar sobre uma possível parceria.`;
+  return `https://wa.me/55${d}?text=${encodeURIComponent(msg)}`;
+}
+
 export async function marcadoresMapa(f: Filtros) {
   const { data, error } = await supabase().rpc("marcadores_mapa", paraRpc(f));
   if (error) throw error;
