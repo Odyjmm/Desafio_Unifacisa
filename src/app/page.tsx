@@ -17,7 +17,9 @@ const ETAPAS = [
 function Etapa({ n, t, d }: (typeof ETAPAS)[number]) {
   const embaixo = Number(n) % 2 === 1;
   const numero = (
-    <div className={`flex h-[72px] items-center justify-center bg-azul text-[38px] sm:h-[160px] sm:text-[84px] font-bold leading-none text-white font-[family-name:Arial,Helvetica,sans-serif] ${embaixo ? "rounded-t-[50%_100%] pt-3 sm:pt-6" : "rounded-b-[50%_100%] pb-3 sm:pb-6"}`}>{n}</div>
+    <div className={`flex h-[84px] items-center justify-center bg-azul text-[42px] font-extrabold leading-none text-white font-[family-name:var(--font-poppins)] sm:h-[160px] sm:text-[84px] ${embaixo ? "rounded-t-[50%_100%]" : "rounded-b-[50%_100%]"}`}>
+      <span className={`block ${embaixo ? "translate-y-[4px] sm:translate-y-[8px]" : "-translate-y-[4px] sm:-translate-y-[8px]"}`}>{n}</span>
+    </div>
   );
   const texto = (
     <div className={`px-3 pb-4 text-center text-white sm:px-[34px] sm:pb-0 ${embaixo ? "pt-5 sm:pt-[44px]" : "pt-4 sm:pt-[38px]"}`}>

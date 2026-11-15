@@ -98,8 +98,8 @@ export default function SecoesDesafio() {
         <h2 id="contexto" className="mt-4 text-[28px] font-bold text-marinho sm:text-[32px]">Por que o Desafio existe</h2>
         <div className="mt-6 grid items-end gap-6 lg:grid-cols-[420px_210px_1fr] lg:gap-10">
           <Image src="/img/inicio/contexto-campus.webp" alt="Vista aérea do campus da Unifacisa" width={420} height={230} className="h-auto w-full rounded-[20px] object-cover" />
-          <div className="flex h-[230px] w-full flex-col items-center justify-end rounded-t-[105px] bg-azul pb-8 text-center text-white lg:w-[210px]" role="img" aria-label="10% da carga horária em extensão">
-            <p className="text-[64px] font-bold leading-none">10<span className="text-[40px]">%</span></p>
+          <div className="flex h-[230px] w-full flex-col items-center justify-center rounded-t-[105px] bg-azul pt-6 text-center text-white lg:w-[210px]" role="img" aria-label="10% da carga horária em extensão">
+            <p className="text-[78px] font-extrabold leading-none font-[family-name:var(--font-poppins)]">10<span className="text-[48px]">%</span></p>
             <p className="mt-3 text-[13px] font-bold leading-tight">da carga horária<br />em extensão</p>
           </div>
           <dl className="space-y-3 self-center">
