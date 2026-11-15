@@ -2,11 +2,13 @@
 // o cabeçalho (absolute) fica por cima, e o conteúdo principal "sobe" sobre o azul.
 import Image from "next/image";
 
-export default function HeroInterno({ titulo, children, alvo = false, altura = 424, className = "", tituloClass = "max-w-[480px] sm:text-[44px] lg:text-[52px]" }: {
+export default function HeroInterno({ titulo, children, alvo = false, altura = 424, className = "", tituloClass = "max-w-[480px] sm:text-[44px] lg:text-[52px]", fundo }: {
   titulo: React.ReactNode; children?: React.ReactNode; alvo?: boolean; altura?: number; className?: string; tituloClass?: string;
+  /** Imagem de fundo opcional (ex.: padrão de mapa da área do administrador). */
+  fundo?: string;
 }) {
   return (
-    <section className={`relative overflow-hidden bg-azul ${className}`} style={{ minHeight: altura }}>
+    <section className={`relative overflow-hidden bg-azul ${className}`} style={{ minHeight: altura, ...(fundo ? { backgroundImage: `url(${fundo})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}>
       {alvo && (
         // Alvo grande do Cadastro (navy) atrás do formulário
         <Image src="/img/alvo-grande.webp" alt="" width={1400} height={1086} priority
