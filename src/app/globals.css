@@ -91,10 +91,15 @@ img, svg, video, canvas { max-width: 100%; }
 :is(.botao-anim, .btn):focus-visible { outline: 3px solid rgba(21, 85, 240, 0.55); outline-offset: 3px; }
 :is(.botao-anim, .btn):disabled, :is(.botao-anim, .btn)[aria-disabled="true"] { cursor: not-allowed; }
 @media (hover: hover) and (pointer: fine) {
-  :is(.botao-anim, .btn):not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(2, 42, 103, 0.22); filter: brightness(1.08); }
+  :is(.botao-anim, .btn):not(:disabled):hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 16px -6px rgba(2, 42, 103, 0.35); filter: brightness(0.86); }
   :is(.botao-anim, .btn):not(:disabled):hover::after { animation: brilho 0.8s ease; }
 }
 :is(.botao-anim, .btn):not(:disabled):active { transform: translateY(1px) scale(0.97); box-shadow: 0 2px 6px rgba(2, 42, 103, 0.2); filter: brightness(0.96); }
+/* Faixa de logos que corre para a direita sem parar (um ciclo = metade do trilho, que tem a lista duplicada). */
+@keyframes passar-direita { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.marquee-trilho { animation: passar-direita 36s linear infinite; will-change: transform; }
+@media (hover: hover) and (pointer: fine) { .marquee:hover .marquee-trilho { animation-play-state: paused; } }
 .botao-pulso { animation: pulso-suave 2.4s ease-in-out infinite; }
 
 /* Cartões e etiquetas clicáveis levantam um pouco ao passar o mouse. */
@@ -110,6 +115,7 @@ img, svg, video, canvas { max-width: 100%; }
 
 /* Quem prefere menos movimento no sistema não recebe animações. */
 @media (prefers-reduced-motion: reduce) {
+  .marquee-trilho { animation: none !important; transform: none !important; }
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
 

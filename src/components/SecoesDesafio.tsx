@@ -205,13 +205,16 @@ export default function SecoesDesafio() {
           </div>
           <Image src="/img/inicio/parceiros.webp" alt="" width={302} height={76} className="hidden h-[76px] w-[302px] rounded-full object-cover grayscale sm:block" />
         </div>
-        <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-6 lg:flex-nowrap lg:justify-between lg:gap-x-4">
-          {PARCEIROS.map((p) => (
-            <li key={p.src}>
-              <Image src={`/img/parceiros/${p.src}`} alt={p.nome} width={p.w} height={p.h} unoptimized style={{ width: p.w, height: p.h }} className="max-w-full object-contain" />
-            </li>
-          ))}
-        </ul>
+        {/* Logos passando sem parar para a direita; a lista é repetida para o laço não ter emenda. */}
+        <div className="marquee mt-8 overflow-hidden" aria-label="Organizações parceiras e demandantes">
+          <ul className="marquee-trilho flex w-max items-center">
+            {[...PARCEIROS, ...PARCEIROS].map((p, i) => (
+              <li key={`${p.src}-${i}`} aria-hidden={i >= PARCEIROS.length} className="shrink-0 pr-10 sm:pr-14">
+                <Image src={`/img/parceiros/${p.src}`} alt={i < PARCEIROS.length ? p.nome : ""} width={p.w} height={p.h} unoptimized style={{ width: p.w, height: p.h }} className="max-w-none object-contain" />
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       {/* Video Cast */}
