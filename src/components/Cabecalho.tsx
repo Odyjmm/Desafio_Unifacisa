@@ -5,26 +5,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { chamarApi } from "@/lib/api";
 
 const LINKS = [
   { href: "/", texto: "Início" },
   { href: "/buscar", texto: "Buscar organizações" },
   { href: "/indicadores", texto: "Indicadores" },
+  { href: "/administrador", texto: "Administrador" },
 ];
 
 export default function Cabecalho() {
   const caminho = usePathname();
-  const [moderador, setModerador] = useState(false);
   const [menuAberto, setMenuAberto] = useState(false);
 
-  // Guia, seção 6: GET /api/moderacao/eu decide se mostramos o item "Administrador".
-  useEffect(() => {
-    chamarApi("/api/moderacao/eu").then((r) => setModerador(r.corpo.moderador === true));
-  }, [caminho]);
-
   const inicio = caminho === "/";
-  const itens = moderador || caminho === "/administrador" ? [...LINKS, { href: "/administrador", texto: "Administrador" }] : LINKS;
+  const itens = LINKS; // "Administrador" aparece para todos, como no desenho; a tela exige login.
 
   // Fecha o menu ao trocar de página, ao apertar Esc ou quando a janela fica larga.
   useEffect(() => { setMenuAberto(false); }, [caminho]);
