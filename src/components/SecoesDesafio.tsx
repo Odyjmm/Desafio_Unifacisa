@@ -65,6 +65,8 @@ function Icone({ tipo }: { tipo: (typeof OBJETIVOS)[number]["icone"] }) {
   );
 }
 
+const LINK_YOUTUBE = "https://www.youtube.com/results?search_query=DESAFIO+UNIFACISA";
+
 export default function SecoesDesafio() {
   return (
     <div className="mt-6 space-y-5 lg:space-y-6">
@@ -213,9 +215,10 @@ export default function SecoesDesafio() {
       <section aria-labelledby="videocast" className="overflow-hidden rounded-[32px] bg-marinho px-6 py-8 text-white sm:px-10 lg:rounded-[44px]">
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_332px]">
           <div className="flex items-center gap-6">
-            <span className="flex h-[96px] w-[96px] shrink-0 items-center justify-center rounded-full bg-lavanda" aria-hidden>
-              <svg width="42" height="42" viewBox="0 0 24 24" fill="#fff"><path d="M7 4.5v15l13-7.5z" /></svg>
-            </span>
+            <a href={LINK_YOUTUBE} target="_blank" rel="noopener noreferrer" aria-label="Assistir ao Video Cast no YouTube"
+              className="flex h-[96px] w-[96px] shrink-0 items-center justify-center rounded-full bg-lavanda transition-transform duration-200 hover:scale-105 active:scale-95">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="#fff" aria-hidden><path d="M7 4.5v15l13-7.5z" /></svg>
+            </a>
             <div>
               <p className="text-[13px] font-bold uppercase tracking-wide text-[#cdd6ff]">Canal de divulgação</p>
               <h2 id="videocast" className="mt-1 text-[24px] font-bold leading-tight sm:text-[28px]">Video Cast | Desafio UNIFACISA</h2>
@@ -226,7 +229,9 @@ export default function SecoesDesafio() {
               </div>
             </div>
           </div>
-          <Image src="/img/inicio/videocast.webp" alt="Página do canal Desafio Unifacisa com os episódios do Video Cast" width={332} height={200} className="mx-auto h-auto w-full max-w-[332px] rounded-[18px]" />
+          <a href={LINK_YOUTUBE} target="_blank" rel="noopener noreferrer" aria-label="Abrir o canal Desafio Unifacisa no YouTube" className="mx-auto block w-full max-w-[332px] transition-transform duration-200 hover:scale-[1.02]">
+            <Image src="/img/inicio/videocast.webp" alt="Página do canal Desafio Unifacisa com os episódios do Video Cast" width={332} height={200} className="h-auto w-full rounded-[18px]" />
+          </a>
         </div>
       </section>
     </div>
