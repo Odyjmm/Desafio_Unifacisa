@@ -10,9 +10,9 @@ export default function HeroInterno({ titulo, children, alvo = false, altura = 4
   return (
     <section className={`relative overflow-hidden bg-azul ${className}`} style={{ minHeight: altura, ...(fundo ? { backgroundImage: `url(${fundo})`, backgroundSize: "cover", backgroundPosition: "center" } : {}) }}>
       {alvo && (
-        // Alvo grande do Cadastro (navy) atrás do formulário
+        // Alvo grande do Cadastro (navy): encostado na borda de baixo da faixa azul, atrás do formulário
         <Image src="/img/alvo-grande.webp" alt="" width={1400} height={1086} priority
-          className="pointer-events-none absolute right-[4%] top-[92px] hidden h-auto w-[300px] lg:block xl:right-[8%] xl:w-[400px]" />
+          className="pointer-events-none absolute bottom-0 right-[4%] hidden h-auto w-[300px] lg:block xl:right-[8%] xl:w-[400px]" />
       )}
       <div className="anim-subir relative mx-auto max-w-[1280px] px-5 pt-[100px] sm:px-6 sm:pt-[128px] lg:px-[42px]">
         <h1 className={`text-[32px] font-bold leading-[1.02] text-white sm:text-[40px] ${tituloClass}`}>{titulo}</h1>
