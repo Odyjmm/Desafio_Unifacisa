@@ -74,6 +74,16 @@ export function linkWhatsapp(telefone: string | null | undefined, nomeOrganizaca
   return `https://wa.me/55${d}?text=${encodeURIComponent(msg)}`;
 }
 
+/** Link do perfil do Instagram a partir de um endereço completo, @usuario ou só o usuário. Devolve null se não der para montar. */
+export function linkInstagram(valor: string | null | undefined) {
+  const v = (valor ?? "").trim();
+  if (!v) return null;
+  if (/^https?:\/\//i.test(v)) return /instagram\.com/i.test(v) ? v : null;
+  if (/^(www\.)?instagram\.com\//i.test(v)) return `https://${v}`;
+  const usuario = v.replace(/^@/, "").replace(/\/+$/, "");
+  return /^[A-Za-z0-9._]{1,30}$/.test(usuario) ? `https://www.instagram.com/${usuario}/` : null;
+}
+
 export async function marcadoresMapa(f: Filtros) {
   const { data, error } = await supabase().rpc("marcadores_mapa", paraRpc(f));
   if (error) throw error;

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
-  buscarOrganizacoes, carregarIndicadores, carregarListas, marcadoresMapa, resumoMunicipios, urlExportar, formatarCnpj, organizacaoPorId, linkWhatsapp,
+  buscarOrganizacoes, carregarIndicadores, carregarListas, marcadoresMapa, resumoMunicipios, urlExportar, formatarCnpj, organizacaoPorId, linkWhatsapp, linkInstagram,
   type Filtros, type Marcador, type Opcao, type Organizacao, type ResumoMunicipio,
 } from "@/lib/api";
 import HeroInterno from "@/components/HeroInterno";
@@ -72,6 +72,14 @@ function Conteudo() {
     try { const r = await buscarOrganizacoes(f, 20, itens.length); setItens((atuais) => [...atuais, ...r.itens.filter((n) => !atuais.some((a) => a.id === n.id))]); }
     catch { setErro("Não foi possível carregar mais organizações."); }
     setMaisLoading(false);
+  };
+
+  const botaoInstagram = (o: Organizacao) => {
+    const link = linkInstagram(o.instagram);
+    return link ? <a href={link} target="_blank" rel="noopener noreferrer" aria-label={`Instagram de ${o.nome}`} title="Abrir o Instagram"
+      className="botao-anim inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-[#f9a03c] via-[#e1306c] to-[#7b3fe4] text-white">
+      <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" /></svg>
+    </a> : null;
   };
 
   const botaoZap = (o: Organizacao, cls: string) => {
@@ -170,6 +178,7 @@ function Conteudo() {
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button onClick={() => setFicha(atual)} className="botao-anim rounded-full bg-azul px-4 py-2.5 text-[12px] font-bold text-white">Ver ficha completa</button>
                   {botaoZap(atual, "")}
+                  {botaoInstagram(atual)}
                 </div>
               </aside>
             )}
@@ -190,8 +199,12 @@ function Conteudo() {
             <div className="flex items-start justify-between gap-3"><h3 className="text-xl font-bold text-marinho">{ficha.nome}</h3><button aria-label="Fechar" onClick={() => setFicha(null)} className="botao-anim flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fundo text-2xl leading-none text-marinho">×</button></div>
             <dl className="mt-4 space-y-3 text-[13px] text-marinho">
               {[["CNPJ", ficha.cnpj ? formatarCnpj(ficha.cnpj) : null], ["Natureza jurídica", ficha.natureza_juridica], ["Endereço", ficha.endereco_completo], ["Áreas", ficha.areas?.join(", ")], ["Públicos", ficha.publicos?.join(", ")],
-                ["Tipos de parceria", ficha.tipos_parceria?.join(", ")], ["Demandas", ficha.demandas], ["E-mail", ficha.email], ["Site", ficha.site_url], ["Instagram", ficha.instagram], ["Facebook", ficha.facebook]]
+                ["Tipos de parceria", ficha.tipos_parceria?.join(", ")], ["Demandas", ficha.demandas], ["E-mail", ficha.email], ["Site", ficha.site_url], ["Facebook", ficha.facebook]]
                 .filter(([, v]) => v).map(([k, v]) => <div key={String(k)}><dt className="text-[10px] font-bold uppercase text-[#5b6b8c]">{k}</dt><dd>{v}</dd></div>)}
+              {linkInstagram(ficha.instagram) && (
+                <div><dt className="text-[10px] font-bold uppercase text-[#5b6b8c]">Instagram</dt>
+                  <dd className="flex flex-wrap items-center gap-3"><span>{ficha.instagram}</span>{botaoInstagram(ficha)}</dd></div>
+              )}
               {ficha.telefone_1 && (
                 <div><dt className="text-[10px] font-bold uppercase text-[#5b6b8c]">Telefone</dt>
                   <dd className="flex flex-wrap items-center gap-3"><span>{ficha.telefone_1}</span>{botaoZap(ficha, "!py-2")}</dd></div>
