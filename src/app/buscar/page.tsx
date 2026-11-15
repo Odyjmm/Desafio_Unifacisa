@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
-  buscarOrganizacoes, carregarIndicadores, carregarListas, marcadoresMapa, resumoMunicipios, urlExportar, formatarCnpj,
+  buscarOrganizacoes, carregarIndicadores, carregarListas, marcadoresMapa, resumoMunicipios, urlExportar, formatarCnpj, organizacaoPorId, linkWhatsapp,
   type Filtros, type Marcador, type Opcao, type Organizacao, type ResumoMunicipio,
 } from "@/lib/api";
 import HeroInterno from "@/components/HeroInterno";
@@ -36,6 +36,8 @@ function Conteudo() {
   const [kpi, setKpi] = useState<{ total: number; cobertos: number; municipios: number } | null>(null);
   const [sel, setSel] = useState<string | null>(null);
   const [ficha, setFicha] = useState<Organizacao | null>(null);
+  const [extra, setExtra] = useState<Organizacao | null>(null); // organização clicada no mapa que ainda não está na lista
+  const [maisLoading, setMaisLoading] = useState(false);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
 
@@ -55,7 +57,30 @@ function Conteudo() {
   useEffect(() => { buscar(f); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const aplicar = (n: Filtros) => { setF(n); buscar(n); };
-  const atual = itens.find((o) => o.id === sel) ?? null;
+  const atual = itens.find((o) => o.id === sel) ?? (extra && extra.id === sel ? extra : null);
+
+  // O mapa mostra todas as organizações, mas a lista carrega só uma página: busca a ficha do ponto clicado.
+  useEffect(() => {
+    if (!sel || itens.some((o) => o.id === sel)) return;
+    let cancelado = false;
+    organizacaoPorId(sel).then((o) => { if (!cancelado) setExtra(o); }).catch(() => { if (!cancelado) setErro("Não foi possível abrir a ficha desta organização."); });
+    return () => { cancelado = true; };
+  }, [sel, itens]);
+
+  const carregarMais = async () => {
+    setMaisLoading(true);
+    try { const r = await buscarOrganizacoes(f, 20, itens.length); setItens((atuais) => [...atuais, ...r.itens.filter((n) => !atuais.some((a) => a.id === n.id))]); }
+    catch { setErro("Não foi possível carregar mais organizações."); }
+    setMaisLoading(false);
+  };
+
+  const botaoZap = (o: Organizacao, cls: string) => {
+    const link = linkWhatsapp(o.telefone_1, o.nome);
+    return link ? <a href={link} target="_blank" rel="noopener noreferrer" className={`botao-anim inline-flex items-center justify-center gap-2 rounded-full bg-[#1a9e55] px-4 py-2.5 text-[12px] font-bold text-white ${cls}`}>
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.38A9.9 9.9 0 1 0 12.04 2Zm5.8 14.1c-.25.7-1.45 1.34-2 1.4-.52.06-1.18.09-1.9-.12-.44-.14-1-.32-1.73-.63-3.04-1.3-5.02-4.37-5.17-4.57-.15-.2-1.23-1.64-1.23-3.12 0-1.49.78-2.22 1.05-2.52.28-.3.6-.37.8-.37h.58c.19 0 .43-.07.67.5.25.6.84 2.07.91 2.22.08.15.13.32.03.52-.1.2-.15.32-.3.5-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.3.77 1.27 1.65 2.05 1.13 1 2.09 1.31 2.39 1.46.3.15.47.12.65-.07.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.28.1 1.75.83 2.05.98.3.15.5.22.57.35.08.12.08.72-.17 1.42Z" /></svg>
+      Enviar mensagem</a> : null;
+  };
+
 
   return (
     <main className="flex min-h-screen flex-col bg-fundo">
@@ -115,6 +140,10 @@ function Conteudo() {
               </li>
             ))}
             {!carregando && itens.length === 0 && <li className="rounded-[18px] bg-white p-4 text-sm">Nenhuma organização encontrada com esses filtros.</li>}
+            {itens.length > 0 && itens.length < total && (
+              <li><button onClick={carregarMais} disabled={maisLoading} className="botao-anim w-full rounded-full border border-[#dfe5f1] bg-white px-4 py-3 text-[12px] font-bold text-marinho disabled:opacity-60">
+                {maisLoading ? "Carregando…" : `Ver mais organizações (${itens.length} de ${total})`}</button></li>
+            )}
           </ul>
 
           <div className="relative min-h-[460px] rounded-[26px] bg-white p-2 sm:min-h-[560px]">
@@ -138,7 +167,10 @@ function Conteudo() {
                   <div className="col-span-2"><dt className="text-[8.5px] font-bold uppercase text-[#5b6b8c]">Endereço</dt><dd>{atual.endereco_completo || "—"}</dd></div>
                 </dl>
                 {/* Nenhuma consulta pública devolve nome/cargo do responsável */}
-                <button onClick={() => setFicha(atual)} className="botao-anim mt-3 rounded-full bg-azul px-4 py-2.5 text-[12px] font-bold text-white">Ver ficha completa</button>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button onClick={() => setFicha(atual)} className="botao-anim rounded-full bg-azul px-4 py-2.5 text-[12px] font-bold text-white">Ver ficha completa</button>
+                  {botaoZap(atual, "")}
+                </div>
               </aside>
             )}
           </div>
@@ -158,8 +190,12 @@ function Conteudo() {
             <div className="flex items-start justify-between gap-3"><h3 className="text-xl font-bold text-marinho">{ficha.nome}</h3><button aria-label="Fechar" onClick={() => setFicha(null)} className="botao-anim flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fundo text-2xl leading-none text-marinho">×</button></div>
             <dl className="mt-4 space-y-3 text-[13px] text-marinho">
               {[["CNPJ", ficha.cnpj ? formatarCnpj(ficha.cnpj) : null], ["Natureza jurídica", ficha.natureza_juridica], ["Endereço", ficha.endereco_completo], ["Áreas", ficha.areas?.join(", ")], ["Públicos", ficha.publicos?.join(", ")],
-                ["Tipos de parceria", ficha.tipos_parceria?.join(", ")], ["Demandas", ficha.demandas], ["Telefone", ficha.telefone_1], ["E-mail", ficha.email], ["Site", ficha.site_url], ["Instagram", ficha.instagram], ["Facebook", ficha.facebook]]
+                ["Tipos de parceria", ficha.tipos_parceria?.join(", ")], ["Demandas", ficha.demandas], ["E-mail", ficha.email], ["Site", ficha.site_url], ["Instagram", ficha.instagram], ["Facebook", ficha.facebook]]
                 .filter(([, v]) => v).map(([k, v]) => <div key={String(k)}><dt className="text-[10px] font-bold uppercase text-[#5b6b8c]">{k}</dt><dd>{v}</dd></div>)}
+              {ficha.telefone_1 && (
+                <div><dt className="text-[10px] font-bold uppercase text-[#5b6b8c]">Telefone</dt>
+                  <dd className="flex flex-wrap items-center gap-3"><span>{ficha.telefone_1}</span>{botaoZap(ficha, "!py-2")}</dd></div>
+              )}
             </dl>
           </div>
         </div>
