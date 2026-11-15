@@ -36,14 +36,14 @@ const DESIGN_THINKING = [
 // Logos enviados pela equipe (public/img/parceiros). `h` é a altura de exibição para equilibrar o peso visual.
 const PARCEIROS = [
   { src: "pedro-americo.png", nome: "Fundação Pedro Américo", w: 140, h: 49 },
-  { src: "sebrae.svg", nome: "Sebrae", w: 110, h: 110 },
-  { src: "help.svg", nome: "HELP — Hospital de Ensino e Laboratórios de Pesquisa", w: 95, h: 95 },
+  { src: "sebrae.png", nome: "Sebrae", w: 110, h: 110 },
+  { src: "help.png", nome: "HELP — Hospital de Ensino e Laboratórios de Pesquisa", w: 95, h: 95 },
   { src: "amde.png", nome: "AMDE — Agência Municipal de Desenvolvimento", w: 90, h: 82 },
   { src: "museu-uepb.png", nome: "Museu de Arte Popular da Paraíba — UEPB", w: 108, h: 84 },
-  { src: "itabaiana.svg", nome: "Prefeitura de Itabaiana", w: 130, h: 37 },
-  { src: "areia.svg", nome: "Prefeitura Municipal de Areia", w: 105, h: 35 },
+  { src: "itabaiana.png", nome: "Prefeitura de Itabaiana", w: 130, h: 37 },
+  { src: "areia.png", nome: "Prefeitura Municipal de Areia", w: 105, h: 35 },
   { src: "irmaos-de-francisco.png", nome: "Irmãos de Francisco", w: 84, h: 90 },
-  { src: "afeto.svg", nome: "Afeto — Clínica Escola do Autismo de Campina Grande", w: 130, h: 43 },
+  { src: "afeto.png", nome: "Afeto — Clínica Escola do Autismo de Campina Grande", w: 130, h: 44 },
 ];
 
 function Etiqueta({ children, claro = false }: { children: React.ReactNode; claro?: boolean }) {
