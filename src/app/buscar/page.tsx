@@ -163,8 +163,9 @@ function Conteudo() {
               <p className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full border border-[#9aa8c7]" />Sem registros ainda</p>
             </div>
             {atual && (
-              <aside className="anim-subir absolute bottom-3 left-3 z-[500] w-[330px] max-w-[calc(100%-1.5rem)] rounded-[20px] bg-white p-4 shadow-xl sm:bottom-5 sm:left-5 sm:max-w-[calc(100%-2.5rem)]">
-                <div className="flex gap-3">
+              <aside className="anim-subir fixed inset-x-3 bottom-3 z-[1500] max-h-[75vh] overflow-y-auto rounded-[20px] bg-white p-4 shadow-xl sm:absolute sm:inset-x-auto sm:bottom-5 sm:left-5 sm:z-[500] sm:max-h-none sm:w-[330px] sm:max-w-[calc(100%-2.5rem)] sm:overflow-visible">
+                <div className="absolute right-2.5 top-2.5"><button aria-label="Fechar cartão" onClick={() => setSel(null)} className="botao-anim flex h-8 w-8 items-center justify-center rounded-full bg-fundo text-xl leading-none text-marinho">×</button></div>
+                <div className="flex gap-3 pr-8">
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-azul text-[12px] font-bold text-white">{iniciais(atual.nome)}</span>
                   <div><p className="text-[13px] font-bold leading-tight text-marinho">{atual.nome}</p>
                     <p className="text-[9.5px] text-[#5b6b8c]">{atual.natureza_juridica}{atual.cnpj ? ` · CNPJ ${formatarCnpj(atual.cnpj)}` : ""}</p></div>
