@@ -2,6 +2,7 @@
 // Tela "Cadastro" em 3 etapas (Guia do backend, seção 5). O navegador nunca grava no banco:
 // o envio final vai para a fila de moderação via POST /api/cadastro.
 import dynamic from "next/dynamic";
+import SeletorMultiplo from "@/components/SeletorMultiplo";
 import { useCallback, useEffect, useState } from "react";
 import { carregarListas, chamarApi, formatarCnpj, type Opcao } from "@/lib/api";
 import Turnstile from "@/components/Turnstile";
@@ -126,24 +127,9 @@ export default function Cadastro() {
     set(k, f[k].includes(id) ? f[k].filter((x) => x !== id) : [...f[k], id]);
   const erro = (c: string) => (erros[c] ? <p className="mt-1 text-[11px] font-semibold text-red-600">{erros[c]}</p> : null);
   const rotulo = (t: string) => <span className="mb-1.5 block text-[11px] font-bold text-marinho">{t}</span>;
-  /** Lista de marcação: uma linha por opção, com caixa que mostra o "V" quando marcada. */
-  const caixas = (k: "areaIds" | "publicoIds" | "tiposParceriaIds", opcoes: Opcao[]) => (
-    <ul className="grid gap-2 md:grid-cols-2">
-      {opcoes.map((o) => {
-        const marcado = f[k].includes(o.id);
-        return (
-          <li key={o.id}>
-            <label className={`botao-anim flex min-h-[46px] cursor-pointer items-center gap-3 rounded-[14px] border px-4 py-2.5 text-[13px] leading-snug ${marcado ? "border-azul bg-[#eef3ff] font-semibold text-marinho" : "border-[#dfe5f1] bg-white text-marinho hover:border-[#b9c6e6] hover:bg-fundo"}`}>
-              <input type="checkbox" className="peer sr-only" checked={marcado} onChange={() => alternar(k, o.id)} />
-              <span aria-hidden className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[6px] border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-azul/40 ${marcado ? "border-azul bg-azul" : "border-[#9aa8c7] bg-white"}`}>
-                <svg viewBox="0 0 16 16" className={`h-3.5 w-3.5 ${marcado ? "opacity-100" : "opacity-0"}`} fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3.2 3.2L13 5" /></svg>
-              </span>
-              <span>{o.nome}</span>
-            </label>
-          </li>
-        );
-      })}
-    </ul>
+  const seletor = (k: "areaIds" | "publicoIds" | "tiposParceriaIds", opcoes: Opcao[], placeholder: string) => (
+    <SeletorMultiplo opcoes={opcoes.map((o) => ({ id: o.id, nome: o.nome, descricao: k === "tiposParceriaIds" ? descricaoTipo(o.nome) : undefined }))}
+      marcados={f[k]} aoAlternar={(id) => alternar(k, id)} placeholder={placeholder} invalido={!!erros[k]} />
   );
 
   if (enviado) return (
@@ -219,20 +205,12 @@ export default function Cadastro() {
             </>)}
 
             {etapa === 3 && (<div className="space-y-6 md:col-span-2">
-              <div><p className="mb-2 text-[12px] font-bold text-marinho">Áreas de atuação * <span className="font-normal text-[#5b6b8c]">(marque todas que se aplicam · {f.areaIds.length} marcada{f.areaIds.length === 1 ? "" : "s"})</span></p>{caixas("areaIds", listas?.areas ?? [])}{erro("areaIds")}</div>
-              <div><p className="mb-2 text-[12px] font-bold text-marinho">Público atendido * <span className="font-normal text-[#5b6b8c]">({f.publicoIds.length} marcado{f.publicoIds.length === 1 ? "" : "s"})</span></p>{caixas("publicoIds", listas?.publicos ?? [])}{erro("publicoIds")}</div>
+              <div><p className="mb-2 text-[12px] font-bold text-marinho">Áreas de atuação * <span className="font-normal text-[#5b6b8c]">(marque todas que se aplicam)</span></p>{seletor("areaIds", listas?.areas ?? [], "Selecione as áreas de atuação")}{erro("areaIds")}</div>
+              <div><p className="mb-2 text-[12px] font-bold text-marinho">Público atendido * <span className="font-normal text-[#5b6b8c]">(marque todos que se aplicam)</span></p>{seletor("publicoIds", listas?.publicos ?? [], "Selecione o público atendido")}{erro("publicoIds")}</div>
               <label className="block"><span className="mb-1.5 block text-[12px] font-bold text-marinho">Qual é a principal demanda da instituição hoje?</span><textarea className={`${entrada} h-auto py-3`} rows={3} maxLength={2000} placeholder="Ex.: precisamos organizar o cadastro das famílias atendidas e hoje usamos cadernos." value={f.demandas} onChange={(e) => set("demandas", e.target.value)} /></label>
               <div><p className="mb-2 text-[12px] font-bold text-marinho">Que tipo de parceria interessa?</p>
-                <div className="grid gap-[9px] md:grid-cols-3">
-                  {(listas?.tipos ?? []).map((o) => { const on = f.tiposParceriaIds.includes(o.id), d = descricaoTipo(o.nome); return (
-                    <label key={o.id} className={`botao-anim flex cursor-pointer items-start gap-3 rounded-[16px] border px-4 py-3 ${on ? "border-azul bg-[#eef1ff]" : "border-[#dfe5f1] bg-white"}`}>
-                      <input type="checkbox" className="sr-only" checked={on} onChange={() => alternar("tiposParceriaIds", o.id)} />
-                      <span aria-hidden className={`mt-0.5 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[6px] border-2 transition-colors ${on ? "border-azul bg-azul" : "border-[#9aa8c7] bg-white"}`}>
-                        <svg viewBox="0 0 16 16" className={`h-3.5 w-3.5 ${on ? "opacity-100" : "opacity-0"}`} fill="none" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3.2 3.2L13 5" /></svg>
-                      </span>
-                      <span><b className="block text-[14px] text-marinho">{o.nome}</b>{d && <span className="block text-[12px] leading-snug text-[#5b6b8c]">{d}</span>}</span>
-                    </label>); })}
-                </div></div>
+                {seletor("tiposParceriaIds", listas?.tipos ?? [], "Selecione os tipos de parceria")}
+</div>
               <label className="flex items-start gap-3 rounded-[16px] bg-[#f0f3fb] px-4 py-4 text-[13px] text-marinho"><input type="checkbox" checked={f.aceiteDeclaracao} onChange={(e) => set("aceiteDeclaracao", e.target.checked)} className="mt-0.5 h-[18px] w-[18px] shrink-0" />
                 <span>Declaro que a instituição não tem fins lucrativos, atua com finalidade social, comunitária ou beneficente, e autorizo a publicação destes dados na base do Desafio Unifacisa.</span></label>{erro("aceiteDeclaracao")}
               <Turnstile aoValidar={setToken} />
