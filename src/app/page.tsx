@@ -1,9 +1,10 @@
-// Tela "Início" — reproduz o Figma: hero, barra de busca, sobre, como funciona, públicos, CTA e rodapé.
+// Tela "Início" — reproduz o Figma: hero, barra de busca, sobre, como funciona, públicos, seções do Desafio, CTA e rodapé.
 // Sem "Propor projeto" nem "Demandas abertas" (decisão do grupo — Guia do backend, seção 3).
 import Link from "next/link";
 import Image from "next/image";
 import BarraBusca from "@/components/BarraBusca";
 import RodapeInstitucional from "@/components/RodapeInstitucional";
+import SecoesDesafio from "@/components/SecoesDesafio";
 
 const ETAPAS = [
   { n: "01", t: "Levantamento", d: "Estudantes e professores mapeiam organizações bairro a bairro, com coleta orientada pelo NUPEX." },
@@ -80,6 +81,8 @@ export default function Inicio() {
             </div>
           </div>
         </section>
+
+        <SecoesDesafio />
 
         <section className="mt-[24px]" aria-label="Cadastre sua organização">
           <div className="flex flex-wrap items-center justify-between gap-4 rounded-[30px] bg-white px-6 py-6 shadow-[8px_10px_26px_rgba(2,42,103,0.18)] lg:rounded-l-[69px] lg:rounded-r-[20px] lg:py-[28px] lg:pl-[58px] lg:pr-[56px]">

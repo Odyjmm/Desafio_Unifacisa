@@ -49,6 +49,15 @@ function Rosca({ itens, total }: { itens: { nome: string; valor: number }[]; tot
   );
 }
 
+/** Os 8 maiores municípios e, se houver mais, uma barra única "Outros N municípios" com a soma do restante (como no Figma). */
+function municipiosComOutros(lista: { municipio: string; total: number }[]) {
+  const ordenada = [...lista].sort((a, b) => b.total - a.total);
+  const itens = ordenada.slice(0, 8).map((l) => ({ nome: l.municipio, valor: l.total }));
+  const resto = ordenada.slice(8);
+  if (resto.length > 0) itens.push({ nome: `Outros ${resto.length} municípios`, valor: resto.reduce((t, l) => t + l.total, 0) });
+  return itens;
+}
+
 export default function IndicadoresPagina() {
   const [d, setD] = useState<Indicadores | null>(null);
   const [municipios, setMunicipios] = useState<Opcao[]>([]);
@@ -63,6 +72,10 @@ export default function IndicadoresPagina() {
     carregarIndicadores(mun ? [Number(mun)] : null, area ? [Number(area)] : null)
       .then((r) => { setErro(""); setD(r); }).catch(() => setErro("Não foi possível carregar os indicadores."));
   }, [mun, area]);
+
+  // Municípios da RMCG que ainda não têm nenhuma organização (para o texto do cartão "Municípios cobertos").
+  const comRegistro = new Set((d?.por_municipio ?? []).map((l) => l.municipio));
+  const semRegistros = d ? municipios.map((m) => m.nome).filter((n) => !comRegistro.has(n)) : [];
 
   const sel = "h-[42px] max-w-full rounded-full bg-white px-4 text-[12px] font-semibold text-marinho outline-none transition-shadow focus:ring-2 focus:ring-white/70 sm:h-[36px]";
   return (
@@ -84,7 +97,7 @@ export default function IndicadoresPagina() {
         {d && (<>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {[["Organizações na base", d.total_organizacoes, "Ativas e com CNPJ coletado nas bases públicas", false],
-              ["Municípios cobertos", `${d.municipios_cobertos}/${d.municipios_total}`, "Municípios da RMCG com registros", false],
+              ["Municípios cobertos", `${d.municipios_cobertos}/${d.municipios_total}`, semRegistros.length > 0 && semRegistros.length <= 3 ? `${semRegistros.join(" e ")} sem registros` : "Municípios da RMCG com registros", false],
               ["Sem coordenadas", d.sem_coordenadas, "Aparecem na lista, mas não no mapa", false],
               ["Completude média", `${d.completude_media}%`, "Média de preenchimento dos campos levantados", true]].map(([t, v, s, escuro]) => (
               <div key={String(t)} className={`cartao-anim rounded-[20px] p-5 ${escuro ? "bg-marinho text-white" : "bg-white text-marinho"}`}>
@@ -95,7 +108,7 @@ export default function IndicadoresPagina() {
           <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
             <section className="rounded-[22px] bg-white p-4 sm:p-6"><div className="flex items-start justify-between"><div><h2 className="text-[16px] font-bold text-marinho">Organizações por município</h2><p className="text-[11px] text-[#5b6b8c]">Campina Grande e demais municípios da região</p></div>
               <Link href="/buscar" className="botao-anim shrink-0 rounded-full px-2 py-1.5 text-[12px] font-bold text-azul underline">Ver no mapa →</Link></div>
-              <Barras itens={d.por_municipio.slice(0, 10).map((l) => ({ nome: l.municipio, valor: l.total }))} /></section>
+              <Barras itens={municipiosComOutros(d.por_municipio)} /></section>
             <section className="rounded-[22px] bg-white p-4 sm:p-6"><h2 className="text-[16px] font-bold text-marinho">Natureza jurídica</h2><p className="text-[11px] text-[#5b6b8c]">Como as organizações estão registradas no CNPJ</p>
               <Rosca total={d.total_organizacoes} itens={d.por_natureza.map((l) => ({ nome: l.natureza, valor: l.total }))} /></section>
           </div>
