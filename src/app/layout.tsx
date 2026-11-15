@@ -6,7 +6,7 @@ import Cabecalho from "@/components/Cabecalho";
 // Fonte do desenho no Figma.
 const albert = Albert_Sans({ variable: "--font-albert", subsets: ["latin"] });
 // Cabeçalho e botões do desenho usam uma geométrica tipo Poppins.
-const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
 
 export const metadata: Metadata = {
   title: "Desafio UNIFACISA — Mapa das parcerias",
