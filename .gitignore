@@ -42,3 +42,7 @@ next-env.d.ts
 # databases
 *.csv
 cookies.txt
+
+# excel and zip files
+*.xlsx
+*.zip

@@ -2,7 +2,7 @@
 // Tela "Administrador" (moderação). Guia, seção 6: sessão por cookie httpOnly,
 // sempre chamando rotas do MESMO domínio (por isso só funciona de verdade no site publicado).
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { carregarListas, chamarApi, supabase } from "@/lib/api";
+import { carregarListas, chamarApi, organizacaoPorId } from "@/lib/api";
 import {
   compararCampos, formatarDataHora, idadeDoEnvio, resumoNovo,
   type Item, type Listas, type ListasAtuais,
@@ -200,8 +200,9 @@ function Envio({ item, listas, aoDecidir }: { item: Item; listas: Listas; aoDeci
   // Nas edições, as listas atuais (áreas, públicos, parcerias) vêm da view pública da própria organização.
   useEffect(() => {
     if (item.tipo !== "edicao" || !item.organizacao_id) return;
-    supabase().from("v_organizacoes_publicas").select("areas, publicos, tipos_parceria").eq("id", item.organizacao_id).maybeSingle()
-      .then(({ data }) => setAtuais((data as ListasAtuais | null) ?? { areas: [], publicos: [], tipos_parceria: [] }));
+    organizacaoPorId(item.organizacao_id)
+      .then((o) => setAtuais(o ? { areas: o.areas ?? [], publicos: o.publicos ?? [], tipos_parceria: o.tipos_parceria ?? [] } : { areas: [], publicos: [], tipos_parceria: [] }))
+      .catch(() => setAtuais({ areas: [], publicos: [], tipos_parceria: [] }));
   }, [item.tipo, item.organizacao_id]);
 
   const novo = useMemo(() => (item.tipo === "criacao" ? resumoNovo(item, listas) : null), [item, listas]);
