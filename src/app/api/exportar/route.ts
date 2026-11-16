@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { montarCsv, type Coluna } from '@/lib/exportacao/csv';
-import { clientePublico } from '@/lib/supabase/publico';
+import { clienteAdmin } from '@/lib/supabase/admin';
 import { ipDe } from '@/lib/seguranca/ip';
 import { dentroDoLimite } from '@/lib/seguranca/limiteMemoria';
+import { veioDoSite } from '@/lib/seguranca/mesmoSite';
 
 type Linha = Record<string, unknown>;
 
@@ -37,6 +38,9 @@ const ids = (v: string | null) =>
 
 export async function GET(req: Request) {
   try {
+    if (!veioDoSite(req, true)) {
+      return NextResponse.json({ codigo: 'acesso_negado', mensagem: 'Acesso permitido apenas pelo site.' }, { status: 403 });
+    }
     if (!dentroDoLimite(`exportar:${ipDe(req)}`, 6, 60_000)) {
       return NextResponse.json({ codigo: 'limite', mensagem: 'Muitos downloads seguidos. Aguarde um minuto.' }, { status: 429 });
     }
@@ -44,7 +48,7 @@ export async function GET(req: Request) {
     const municipios = ids(p.get('municipios'));
     const areas = ids(p.get('areas'));
 
-    const db = clientePublico();
+    const db = clienteAdmin();
     const linhas: Linha[] = [];
     const TAMANHO = 500;
     for (let de = 0; ; de += TAMANHO) {

@@ -1,5 +1,6 @@
 // Camada de acesso ao backend (Guia do backend, seções 4 a 7).
-// O navegador NUNCA grava no banco: só lê via Supabase (chave pública) e envia à fila via /api.
+// O navegador NUNCA grava no banco. Organizações são lidas pelas rotas /api/publico/... (com limite de uso);
+// só as listas auxiliares (áreas, públicos, municípios...) vêm direto do Supabase.
 import { clientePublico } from "@/lib/supabase/publico";
 
 export type Opcao = { id: number; nome: string };
@@ -28,6 +29,7 @@ export type Organizacao = {
   publicos: string[] | null;
   tipos_parceria: string[] | null;
   demandas: string | null;
+  nome_secundario?: string | null; // nome fantasia (quando existe e é diferente da razão social)
   telefone_1: string | null;
   email: string | null;
   site_url: string | null;
@@ -40,29 +42,27 @@ export type Marcador = { id: string; nome: string; latitude: number; longitude: 
 let cliente: ReturnType<typeof clientePublico> | null = null;
 export const supabase = () => (cliente ??= clientePublico());
 
-/** Converte os filtros da tela nos parâmetros das funções RPC do Supabase. */
-const paraRpc = (f: Filtros) => ({
-  p_texto: f.texto?.trim() || null,
-  p_municipio_ids: f.municipios?.length ? f.municipios : null,
-  p_area_ids: f.areas?.length ? f.areas : null,
-  p_publico_ids: f.publicos?.length ? f.publicos : null,
-  p_tipo_parceria_ids: f.tiposParceria?.length ? f.tiposParceria : null,
-});
+/** Converte os filtros da tela no corpo JSON das rotas /api/publico. */
+const corpo = (f: Filtros) => ({ texto: f.texto?.trim() || undefined, municipios: f.municipios, areas: f.areas, publicos: f.publicos, tiposParceria: f.tiposParceria });
 
-export async function buscarOrganizacoes(f: Filtros, limite = 20, deslocamento = 0) {
-  const { data, error } = await supabase().rpc("buscar_organizacoes", { ...paraRpc(f), p_limite: limite, p_deslocamento: deslocamento });
-  if (error) throw error;
-  return data as { total: number; itens: Organizacao[] };
+async function postar<T>(rota: string, dados: object): Promise<T> {
+  const r = await fetch(`/api/publico/${rota}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(dados) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((j as { mensagem?: string }).mensagem ?? "Não foi possível consultar agora.");
+  return j as T;
 }
 
-/** Colunas públicas da ficha (a coluna "busca" não deve ser selecionada). */
-const COLUNAS_FICHA = "id,nome,cnpj,situacao_cadastral,municipio,bairro,endereco_completo,latitude,longitude,natureza_juridica,areas,publicos,tipos_parceria,demandas,telefone_1,email,site_url,instagram,facebook";
+export async function buscarOrganizacoes(f: Filtros, limite = 20, deslocamento = 0) {
+  return postar<{ total: number; itens: Organizacao[] }>("busca", { ...corpo(f), limite, deslocamento });
+}
 
 /** Uma organização pelo id: usada quando o ponto clicado no mapa não está entre as primeiras da lista. */
 export async function organizacaoPorId(id: string) {
-  const { data, error } = await supabase().from("v_organizacoes_publicas").select(COLUNAS_FICHA).eq("id", id).maybeSingle();
-  if (error) throw error;
-  return (data as Organizacao | null) ?? null;
+  const r = await fetch(`/api/publico/ficha/${encodeURIComponent(id)}`);
+  if (r.status === 404) return null;
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error((j as { mensagem?: string }).mensagem ?? "Não foi possível carregar a ficha.");
+  return j as Organizacao;
 }
 
 /** Link do WhatsApp (só para celulares com DDD, que são os que têm WhatsApp). Devolve null quando não dá. */
@@ -85,17 +85,13 @@ export function linkInstagram(valor: string | null | undefined) {
 }
 
 export async function marcadoresMapa(f: Filtros) {
-  const { data, error } = await supabase().rpc("marcadores_mapa", paraRpc(f));
-  if (error) throw error;
-  return (data ?? []) as Marcador[];
+  return postar<Marcador[]>("mapa", corpo(f));
 }
 
 export type ResumoMunicipio = { municipio_id: number; municipio: string; latitude: number; longitude: number; total: number; sem_coordenadas: number };
 /** Bolhas por município do mapa (mesmos filtros da lista). */
 export async function resumoMunicipios(f: Filtros) {
-  const { data, error } = await supabase().rpc("resumo_mapa_municipios", paraRpc(f));
-  if (error) throw error;
-  return (data ?? []) as ResumoMunicipio[];
+  return postar<ResumoMunicipio[]>("resumo", corpo(f));
 }
 
 export type Indicadores = {
@@ -104,9 +100,7 @@ export type Indicadores = {
   por_municipio: { municipio: string; total: number }[]; por_natureza: { natureza: string; total: number }[]; por_area: { area: string; total: number }[];
 };
 export async function carregarIndicadores(municipios: number[] | null = null, areas: number[] | null = null) {
-  const { data, error } = await supabase().rpc("indicadores", { p_municipio_ids: municipios, p_area_ids: areas });
-  if (error) throw error;
-  return data as Indicadores;
+  return postar<Indicadores>("indicadores", { municipios, areas });
 }
 
 export async function carregarListas() {
