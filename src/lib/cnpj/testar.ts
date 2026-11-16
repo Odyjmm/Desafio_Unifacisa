@@ -3,6 +3,8 @@ import { cnpjValido, formatarCnpj, limparCnpj, ehMatriz, raizCnpj } from './vali
 import { classificarNatureza } from './naturezaJuridica';
 import { consultarCnpj } from './brasilapi';
 
+type Falha = Extract<Awaited<ReturnType<typeof consultarCnpj>>, { ok: false }>;
+
 assert(cnpjValido('12.ABC.345/01DE-35'), 'alfanumérico oficial (exemplo da Receita)');
 assert(cnpjValido('12abc34501de35'), 'minúsculas são aceitas');
 assert(cnpjValido('00.000.000/0001-91'));
@@ -76,17 +78,17 @@ const resp = (status: number, body?: unknown) =>
   assert.deepEqual(await consultarCnpj('11222333000181', { fetchImpl: resp(404) }), { ok: false, erro: 'nao_encontrado' });
   assert.deepEqual(await consultarCnpj('11222333000181', { fetchImpl: resp(429) }), { ok: false, erro: 'limite' });
 
-  const e503: any = await consultarCnpj('11222333000181', { fetchImpl: resp(503) });
+  const e503 = (await consultarCnpj('11222333000181', { fetchImpl: resp(503) })) as Falha;
   assert.equal(e503.erro, 'indisponivel');
   assert.equal(e503.detalhe, 'HTTP 503');
 
-  const eRede: any = await consultarCnpj('11222333000181', { fetchImpl: (async () => { throw new Error('rede'); }) as unknown as typeof fetch });
+  const eRede = (await consultarCnpj('11222333000181', { fetchImpl: (async () => { throw new Error('rede'); }) as unknown as typeof fetch })) as Falha;
   assert.equal(eRede.erro, 'indisponivel');
-  assert(eRede.detalhe.includes('rede'));
+  assert(eRede.detalhe?.includes('rede'));
 
   const lento = (async (_u: unknown, o: { signal: AbortSignal }) =>
     new Promise((_, rej) => o.signal.addEventListener('abort', () => rej(new Error('abort'))))) as unknown as typeof fetch;
-  const eLento: any = await consultarCnpj('11222333000181', { fetchImpl: lento, timeoutMs: 50 });
+  const eLento = (await consultarCnpj('11222333000181', { fetchImpl: lento, timeoutMs: 50 })) as Falha;
   assert.equal(eLento.erro, 'indisponivel');
 
   let cabecalhos: Record<string, string> = {};

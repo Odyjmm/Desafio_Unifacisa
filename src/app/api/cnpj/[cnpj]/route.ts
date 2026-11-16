@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { consultarCnpj } from '@/lib/cnpj/brasilapi';
 import { cnpjDaMatriz, cnpjValido, formatarCnpj, limparCnpj, raizCnpj } from '@/lib/cnpj/validar';
 import { semAcento } from '@/lib/cadastro/texto';
-import { clientePublico } from '@/lib/supabase/publico';
+import { clienteAdmin } from '@/lib/supabase/admin';
 import { ipDe } from '@/lib/seguranca/ip';
 import { dentroDoLimite } from '@/lib/seguranca/limiteMemoria';
+import { veioDoSite } from '@/lib/seguranca/mesmoSite';
 
 const SEM_CACHE = { 'Cache-Control': 'no-store' };
 const resposta = (corpo: Record<string, unknown>, status = 200) =>
@@ -17,6 +18,9 @@ const COLUNAS_FICHA =
 
 export async function GET(req: Request, ctx: { params: Promise<{ cnpj: string }> }) {
   try {
+    if (!veioDoSite(req)) {
+      return resposta({ codigo: 'acesso_negado', mensagem: 'Acesso permitido apenas pelo site.' }, 403);
+    }
     if (!dentroDoLimite(`cnpj:${ipDe(req)}`, 20, 60_000)) {
       return resposta({ codigo: 'limite', mensagem: 'Muitas consultas seguidas. Aguarde um minuto.' }, 429);
     }
@@ -27,7 +31,7 @@ export async function GET(req: Request, ctx: { params: Promise<{ cnpj: string }>
       return resposta({ codigo: 'cnpj_invalido', mensagem: 'CNPJ inválido. Confira os números digitados.' }, 400);
     }
 
-    const db = clientePublico();
+    const db = clienteAdmin();
 
     const { data: existente, error: e1 } = await db
       .from('v_organizacoes_publicas')
